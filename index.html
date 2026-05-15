@@ -1419,7 +1419,7 @@ if(tgUser){
   };
   state.page = 'p2p';
 }
-
+window.onerror = function(e){ document.body.innerHTML = '<div style="color:lime;padding:20px;font-family:monospace">'+e+'</div>'; }
 render();
 
 // Simulate live price ticks every 15s
