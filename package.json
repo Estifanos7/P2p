@@ -1,0 +1,23 @@
+{
+  "name": "swapguard-bot",
+  "version": "1.0.0",
+  "description": "SwapGuard P2P Crypto Escrow Telegram Bot + API",
+  "main": "bot.js",
+  "scripts": {
+    "start":   "node bot.js",
+    "dev":     "nodemon bot.js",
+    "test":    "node test.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "grammy":  "^1.26.0",
+    "express": "^4.18.2",
+    "dotenv":  "^16.3.1",
+    "uuid":    "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
