@@ -393,29 +393,7 @@ function toast(msg, type='success'){
   setTimeout(()=>{ state.toast=null; render(); }, 2600);
 }
 
-function buildApp(){
-  const showNav = state.user && state.page !== 'landing' && state.page !== 'auth';
-  return `
-    ${state.toast ? `<div class="toast toast-${state.toast.type}">${state.toast.msg}</div>` : ''}
-    ${state.tradeModal ? buildTradeModal() : ''}
-    ${buildPage()}
-    ${showNav ? buildNav() : ''}
-  `;
-}
-
-function buildNav(){
-  const tabs = [
-    {id:'p2p', icon: iconP2P(), label:'P2P'},
-    {id:'trades', icon: iconTrades(), label:'Trades'},
-    {id:'profile', icon: iconProfile(), label:'Profile'},
-  ];
-  return `<nav class="bottom-nav">
-    ${tabs.map(t=>`
-      <button class="nav-btn${state.page===t.id?' active':''}" data-nav="${t.id}">
-        ${t.icon}<span>${t.label}</span>
-      </button>`).join('')}
-  </nav>`;
-}
+// buildApp, buildNav, bindEvents, buildEscrow defined later (full versions)
 
 function buildPage(){
   switch(state.page){
@@ -637,70 +615,7 @@ function buildTradeModal(){
   </div>`;
 }
 
-// ───────────────────────────────────────────────────────────
-// ESCROW PAGE
-// ───────────────────────────────────────────────────────────
-function buildEscrow(){
-  const t = state.escrowTrade;
-  if(!t) return `<div class="page"><div class="empty-state"><div class="empty-icon">🔐</div><div class="empty-text">No active trade</div></div></div>`;
-  const steps = ['Created','Locked','Paid','Released'];
-  const stepIdx = ['created','locked','paid','released'].indexOf(t.status);
-  const isBuyer = t.role==='buyer';
-  return `<div>
-    <div class="topbar">
-      <button style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:22px;padding:0 8px 0 0" id="back-p2p">←</button>
-      <div class="topbar-logo">Swap<span>Guard</span></div>
-      <span class="badge ${t.status==='released'?'badge-green':t.status==='disputed'?'badge-red':'badge-blue'}">${t.status.toUpperCase()}</span>
-    </div>
-    <div class="page">
-      <div style="padding:16px 16px 0">
-        <div style="font-size:20px;font-weight:800;margin-bottom:4px">${t.coin} Escrow Trade</div>
-        <div style="font-size:12px;color:var(--text2);font-family:var(--mono)">Trade ID: ${t.id}</div>
-      </div>
-      <div style="padding:20px 0">
-        <div class="escrow-progress">
-          ${steps.map((s,i)=>`
-            ${i>0?`<div class="escrow-line${i<=stepIdx?' done':''}"></div>`:''}
-            <div class="escrow-step">
-              <div class="escrow-step-dot${i<stepIdx?' done':i===stepIdx?' active':''}">
-                ${i<stepIdx?'✓':i+1}
-              </div>
-              <div class="escrow-step-label${i===stepIdx?' active':''}">${s}</div>
-            </div>`).join('')}
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Trade Details</div></div>
-        ${[
-          ['Trade ID', t.id],
-          ['Coin', t.coin],
-          ['Amount', `${t.cryptoAmt} ${t.coin}`],
-          ['You Pay', `$${t.fiatAmt}`],
-          ['Rate', `$${t.rate.toLocaleString()}`],
-          ['Payment', t.payMethod],
-          [isBuyer?'Seller':'Buyer', `@${t.counterparty}`],
-          ['Escrow Fee', `$${t.fee}`],
-        ].map(([k,v])=>`<div class="info-row"><span class="info-label">${k}</span><span style="font-family:var(--mono);font-size:13px;font-weight:700">${v}</span></div>`).join('')}
-      </div>
-      ${buildEscrowActions(t, isBuyer)}
-      <div class="card">
-        <div class="card-header"><div class="card-title">🔐 Escrow Security</div></div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.7">
-          ${t.cryptoAmt} ${t.coin} is locked in SwapGuard escrow. Funds will only release when the seller confirms payment receipt. If a dispute arises, our team will review evidence within 24 hours.
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-          <span class="security-chip">🔒 Multi-sig</span>
-          <span class="security-chip">⏱️ 24h Dispute</span>
-          <span class="security-chip">🤝 Arbitration</span>
-        </div>
-      </div>
-      ${t.status !== 'released' && t.status !== 'disputed' ? `
-      <div style="padding:0 16px 16px">
-        <button class="btn btn-danger" id="open-dispute">⚠️ Open Dispute</button>
-      </div>` : ''}
-    </div>
-  </div>`;
-}
+// buildEscrow defined below (full version with chat)
 
 function buildEscrowActions(t, isBuyer){
   if(t.status === 'created'){
@@ -855,243 +770,9 @@ function iconTrades(){ return `<svg viewBox="0 0 24 24" fill="none" stroke="curr
 function iconProfile(){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>`; }
 function iconTelegram(){ return `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.68 7.92c-.12.56-.48.7-.96.44l-2.64-1.96-1.28 1.24c-.14.14-.26.26-.52.26l.18-2.6 4.72-4.26c.2-.18-.04-.28-.32-.1L7.8 15.12l-2.56-.8c-.56-.18-.58-.56.12-.82l10-3.86c.46-.18.88.1.72.8l.56.36z"/></svg>`; }
 
-// ───────────────────────────────────────────────────────────
-// EVENT BINDING
-// ───────────────────────────────────────────────────────────
-function bindEvents(){
-  // Navigation
-  document.querySelectorAll('[data-nav]').forEach(el=>
-    el.addEventListener('click',()=>{ state.page=el.dataset.nav; render(); }));
+// bindEvents defined below (full version)
 
-  // Landing
-  const ctaStart = document.getElementById('cta-start');
-  if(ctaStart) ctaStart.addEventListener('click',()=>{ state.page=state.user?'p2p':'auth'; render(); });
-  const ctaBrowse = document.getElementById('cta-browse');
-  if(ctaBrowse) ctaBrowse.addEventListener('click',()=>{ if(!state.user){state.page='auth';}else{state.page='p2p';} render(); });
-
-  // Auth tabs
-  const tabLogin = document.getElementById('tab-login');
-  if(tabLogin) tabLogin.addEventListener('click',()=>{ state.authTab='login'; render(); });
-  const tabSignup = document.getElementById('tab-signup');
-  if(tabSignup) tabSignup.addEventListener('click',()=>{ state.authTab='signup'; render(); });
-
-  // Telegram auth
-  const tgAuth = document.getElementById('tg-auth');
-  if(tgAuth) tgAuth.addEventListener('click',()=>{
-    state.user = { username: tgUser?.username||tgUser?.first_name||'TGUser', email:'telegram@user', completedTrades:0, rating:'New', joinDate:'2024' };
-    state.page='p2p'; render(); toast('Welcome back via Telegram! 🎉');
-  });
-
-  // Auth form fields
-  ['f-username','f-email','f-password'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.addEventListener('input', e=>{
-      const key = id.replace('f-','');
-      if(state.authTab==='login') state.loginForm[key]=e.target.value;
-      else state.signupForm[key]=e.target.value;
-    });
-  });
-
-  const togglePw = document.getElementById('toggle-pw');
-  if(togglePw) togglePw.addEventListener('click',()=>{ state.showPassword=!state.showPassword; render(); });
-
-  const authSubmit = document.getElementById('auth-submit');
-  if(authSubmit) authSubmit.addEventListener('click',()=>{
-    if(state.authTab==='login'){
-      const {email, password} = state.loginForm;
-      if(!email||!password){ toast('Please fill in all fields','error'); return; }
-      state.user = { username: email.split('@')[0]||'Trader', email, completedTrades:0, rating:'New' };
-      state.page='p2p'; render(); toast('Signed in successfully! 🎉');
-    } else {
-      const {username, email, password} = state.signupForm;
-      if(!username||!email||!password){ toast('Please fill in all fields','error'); return; }
-      if(password.length<8){ toast('Password must be 8+ characters','error'); return; }
-      state.user = { username, email, completedTrades:0, rating:'New' };
-      state.page='p2p'; render(); toast('Account created! Welcome 🎉');
-    }
-  });
-
-  // P2P tabs/filters
-  const tabBuy = document.getElementById('p2p-tab-buy');
-  if(tabBuy) tabBuy.addEventListener('click',()=>{ state.p2pTab='buy'; render(); });
-  const tabSell = document.getElementById('p2p-tab-sell');
-  if(tabSell) tabSell.addEventListener('click',()=>{ state.p2pTab='sell'; render(); });
-
-  document.querySelectorAll('[data-coin]').forEach(el=>
-    el.addEventListener('click',()=>{ state.p2pCoin=el.dataset.coin; render(); }));
-
-  // Offer cards
-  document.querySelectorAll('[data-offer]').forEach(el=>{
-    el.addEventListener('click', e=>{
-      if(e.target.dataset.trade) return;
-      if(!state.user){ state.page='auth'; render(); return; }
-      const offer = state.offers.find(o=>o.id===el.dataset.offer);
-      if(offer){ state.activeOffer=offer; state.tradeModal=true; state.tradeForm={amount:'',payMethod:offer.payMethods[0]}; render(); }
-    });
-  });
-
-  // Trade buttons
-  document.querySelectorAll('[data-trade]').forEach(el=>{
-    el.addEventListener('click', e=>{
-      e.stopPropagation();
-      if(!state.user){ state.page='auth'; render(); return; }
-      const offer = state.offers.find(o=>o.id===el.dataset.trade);
-      if(offer){ state.activeOffer=offer; state.tradeModal=true; state.tradeForm={amount:'',payMethod:offer.payMethods[0]}; render(); }
-    });
-  });
-
-  // Modal
-  const modalOverlay = document.getElementById('modal-overlay');
-  if(modalOverlay) modalOverlay.addEventListener('click', e=>{
-    if(e.target===modalOverlay){ state.tradeModal=false; render(); }
-  });
-  const closeModal = document.getElementById('close-modal');
-  if(closeModal) closeModal.addEventListener('click',()=>{ state.tradeModal=false; render(); });
-
-  const tradeAmtEl = document.getElementById('trade-amount');
-  if(tradeAmtEl) tradeAmtEl.addEventListener('input', e=>{ state.tradeForm.amount=e.target.value; render(); });
-  const tradePayEl = document.getElementById('trade-pay');
-  if(tradePayEl) tradePayEl.addEventListener('change', e=>{ state.tradeForm.payMethod=e.target.value; render(); });
-
-  const confirmTrade = document.getElementById('confirm-trade');
-  if(confirmTrade) confirmTrade.addEventListener('click',()=>{
-    const o = state.activeOffer;
-    const amt = parseFloat(state.tradeForm.amount);
-    const cryptoAmt = (amt/o.price).toFixed(8);
-    const fee = (amt*0.005).toFixed(2);
-    const trade = {
-      id: 'TRD-'+Date.now().toString(36).toUpperCase(),
-      type: o.type, coin: o.coin,
-      fiatAmt: amt.toFixed(2), cryptoAmt, fee,
-      rate: o.price, payMethod: state.tradeForm.payMethod,
-      counterparty: o.username,
-      status: 'created',
-      role: 'buyer',
-      date: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
-    };
-    state.trades.unshift(trade);
-    state.escrowTrade = trade;
-    state.tradeModal = false;
-    state.page = 'escrow';
-    render();
-    toast(`Escrow trade opened! 🔐 ID: ${trade.id}`);
-  });
-
-  // Escrow actions
-  const lockEscrow = document.getElementById('lock-escrow');
-  if(lockEscrow) lockEscrow.addEventListener('click',()=>{
-    state.escrowTrade.status='locked'; updateTrade(); render(); toast('Crypto locked in escrow! 🔐');
-  });
-  const confirmPaid = document.getElementById('confirm-paid');
-  if(confirmPaid) confirmPaid.addEventListener('click',()=>{
-    state.escrowTrade.status='paid'; updateTrade(); render(); toast('Payment confirmed! Waiting for seller... ⏳');
-  });
-  const releaseEscrow = document.getElementById('release-escrow');
-  if(releaseEscrow) releaseEscrow.addEventListener('click',()=>{
-    state.escrowTrade.status='released'; updateTrade(); render(); toast('Escrow released! Trade complete 🎉');
-  });
-  const openDispute = document.getElementById('open-dispute');
-  if(openDispute) openDispute.addEventListener('click',()=>{
-    state.escrowTrade.status='disputed'; updateTrade(); render(); toast('Dispute opened. Support will contact you ⚠️','error');
-  });
-  const backP2p = document.getElementById('back-p2p');
-  if(backP2p) backP2p.addEventListener('click',()=>{ state.page='p2p'; render(); });
-
-  // Trade view
-  document.querySelectorAll('[data-trade-view]').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const t = state.trades.find(x=>x.id===el.dataset.tradeView);
-      if(t){ state.escrowTrade=t; state.page='escrow'; render(); }
-    });
-  });
-
-  // Profile
-  const logoutBtn = document.getElementById('logout-btn');
-  if(logoutBtn) logoutBtn.addEventListener('click',()=>{ state.user=null; state.page='landing'; render(); toast('Logged out','info'); });
-
-  const goP2p = document.getElementById('go-p2p');
-  if(goP2p) goP2p.addEventListener('click',()=>{ state.page='p2p'; render(); });
-
-  const createOffer = document.getElementById('create-offer');
-  if(createOffer) createOffer.addEventListener('click',()=>{
-    if(!state.user){ state.page='auth'; render(); return; }
-    state.postOfferModal=true; render();
-  });
-
-  // Post offer modal
-  const closePost = document.getElementById('close-post-modal');
-  if(closePost) closePost.addEventListener('click',()=>{ state.postOfferModal=false; render(); });
-
-  ['po-type','po-coin','po-price','po-min','po-max'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(!el) return;
-    el.addEventListener('change',e=>{ state.postForm[id.replace('po-','')]=e.target.value; render(); });
-    el.addEventListener('input', e=>{ state.postForm[id.replace('po-','')]=e.target.value; render(); });
-  });
-
-  document.querySelectorAll('.po-pay-chip').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const m = el.dataset.pay;
-      const arr = state.postForm.payMethods;
-      const idx = arr.indexOf(m);
-      if(idx>=0) arr.splice(idx,1); else arr.push(m);
-      render();
-    });
-  });
-
-  const submitPost = document.getElementById('submit-post-offer');
-  if(submitPost) submitPost.addEventListener('click',()=>{
-    const f = state.postForm;
-    if(!f.price||!f.min||!f.max){ toast('Fill in all fields','error'); return; }
-    if(parseFloat(f.min)>=parseFloat(f.max)){ toast('Min must be less than Max','error'); return; }
-    if(!f.payMethods.length){ toast('Select at least one payment method','error'); return; }
-    const newOffer = {
-      id: 'OFF-'+Math.random().toString(36).substr(2,6).toUpperCase(),
-      type: f.type, coin: f.coin,
-      price: parseFloat(f.price),
-      minAmount: parseFloat(f.min), maxAmount: parseFloat(f.max),
-      payMethods: [...f.payMethods],
-      username: state.user.username,
-      trades: state.user.completedTrades||0,
-      completion: 100, rating: 5.0, avgTime: 15, online: true,
-      ownerId: state.user.id||0,
-    };
-    state.offers.unshift(newOffer);
-    state.postOfferModal=false;
-    state.p2pCoin = newOffer.coin;
-    state.p2pTab  = newOffer.type;
-    state.page    = 'p2p';
-    render();
-    toast(`Offer posted! 🎉 ${newOffer.type==='sell'?'Sell':'Buy'} ${newOffer.coin}`);
-  });
-
-  // Trade chat
-  const chatSend = document.getElementById('chat-send');
-  if(chatSend) chatSend.addEventListener('click',()=>sendChatMsg());
-  const chatInput = document.getElementById('chat-input');
-  if(chatInput) chatInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); sendChatMsg(); }});
-
-  // Rating modal
-  const closeRating = document.getElementById('close-rating-modal');
-  if(closeRating) closeRating.addEventListener('click',()=>{ state.ratingModal=false; render(); });
-  document.querySelectorAll('.rating-star-btn').forEach(el=>{
-    el.addEventListener('click',()=>{ state.pendingRating=parseInt(el.dataset.star); render(); });
-  });
-  const submitRating = document.getElementById('submit-rating');
-  if(submitRating) submitRating.addEventListener('click',()=>{
-    if(!state.pendingRating){ toast('Pick a star rating first','error'); return; }
-    state.ratingModal=false;
-    toast(`Thanks for rating ⭐ ${state.pendingRating}/5`);
-    render();
-  });
-
-  // Notification bell
-  const notifBell = document.getElementById('notif-bell');
-  if(notifBell) notifBell.addEventListener('click',()=>{ state.notifOpen=!state.notifOpen; render(); });
-  const closeNotif = document.getElementById('close-notif');
-  if(closeNotif) closeNotif.addEventListener('click',()=>{ state.notifOpen=false; render(); });
-}
+// (old bindEvents removed)
 
 // ───────────────────────────────────────────────────────────
 // POST OFFER MODAL
@@ -1324,20 +1005,17 @@ function unreadNotifCount(){
 }
 
 // ───────────────────────────────────────────────────────────
-// PATCH buildApp to include new modals
+// FULL buildApp (replaces original)
 // ───────────────────────────────────────────────────────────
-const _buildApp_orig = buildApp;
-
-// Override buildApp to inject new modals
 function buildApp(){
   const showNav = state.user && state.page !== 'landing' && state.page !== 'auth';
   const unread  = unreadNotifCount();
   return `
     ${state.toast ? `<div class="toast toast-${state.toast.type}">${state.toast.msg}</div>` : ''}
-    ${state.tradeModal    ? buildTradeModal()    : ''}
-    ${state.postOfferModal? buildPostOfferModal(): ''}
-    ${state.ratingModal   ? buildRatingModal(state.escrowTrade) : ''}
-    ${state.notifOpen     ? buildNotifPanel()    : ''}
+    ${state.tradeModal     ? buildTradeModal()    : ''}
+    ${state.postOfferModal ? buildPostOfferModal(): ''}
+    ${state.ratingModal    ? buildRatingModal(state.escrowTrade) : ''}
+    ${state.notifOpen      ? buildNotifPanel()    : ''}
     ${buildPage()}
     ${showNav ? buildNavWithBadge(unread) : ''}
   `;
@@ -1362,72 +1040,337 @@ function buildNavWithBadge(unread){
 }
 
 // ───────────────────────────────────────────────────────────
-// PATCH buildEscrow to include chat + rating CTA
+// FULL buildEscrow with chat + rating CTA
 // ───────────────────────────────────────────────────────────
-const _buildEscrow_orig = buildEscrow;
 function buildEscrow(){
-  const base = _buildEscrow_orig();
-  // inject chat and rating before closing div
-  if(!state.escrowTrade) return base;
   const t = state.escrowTrade;
+  if(!t) return `<div class="page"><div class="empty-state"><div class="empty-icon">🔐</div><div class="empty-text">No active trade</div></div></div>`;
+  const steps = ['Created','Locked','Paid','Released'];
+  const stepIdx = ['created','locked','paid','released'].indexOf(t.status);
+  const isBuyer = t.role==='buyer';
   const chatHtml = buildTradeChat(t);
   const ratingCta = t.status==='released' && !t.rated
     ? `<div style="padding:0 16px 8px"><button class="btn btn-secondary" id="open-rating-btn">⭐ Rate @${t.counterparty}</button></div>`
     : '';
-  // Insert before last </div> of the page wrapper
-  return base.replace('</div></div>', `${chatHtml}${ratingCta}</div></div>`);
+  return `<div>
+    <div class="topbar">
+      <button style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:22px;padding:0 8px 0 0" id="back-p2p">←</button>
+      <div class="topbar-logo">Swap<span>Guard</span></div>
+      <span class="badge ${t.status==='released'?'badge-green':t.status==='disputed'?'badge-red':'badge-blue'}">${t.status.toUpperCase()}</span>
+    </div>
+    <div class="page">
+      <div style="padding:16px 16px 0">
+        <div style="font-size:20px;font-weight:800;margin-bottom:4px">${t.coin} Escrow Trade</div>
+        <div style="font-size:12px;color:var(--text2);font-family:var(--mono)">Trade ID: ${t.id}</div>
+      </div>
+      <div style="padding:20px 0">
+        <div class="escrow-progress">
+          ${steps.map((s,i)=>`
+            ${i>0?`<div class="escrow-line${i<=stepIdx?' done':''}"></div>`:''}
+            <div class="escrow-step">
+              <div class="escrow-step-dot${i<stepIdx?' done':i===stepIdx?' active':''}">
+                ${i<stepIdx?'✓':i+1}
+              </div>
+              <div class="escrow-step-label${i===stepIdx?' active':''}">${s}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Trade Details</div></div>
+        ${[
+          ['Trade ID', t.id],
+          ['Coin', t.coin],
+          ['Amount', `${t.cryptoAmt} ${t.coin}`],
+          ['You Pay', `$${t.fiatAmt}`],
+          ['Rate', `$${t.rate.toLocaleString()}`],
+          ['Payment', t.payMethod],
+          [isBuyer?'Seller':'Buyer', `@${t.counterparty}`],
+          ['Escrow Fee', `$${t.fee}`],
+        ].map(([k,v])=>`<div class="info-row"><span class="info-label">${k}</span><span style="font-family:var(--mono);font-size:13px;font-weight:700">${v}</span></div>`).join('')}
+      </div>
+      ${buildEscrowActions(t, isBuyer)}
+      ${chatHtml}
+      ${ratingCta}
+      <div class="card">
+        <div class="card-header"><div class="card-title">🔐 Escrow Security</div></div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          ${t.cryptoAmt} ${t.coin} is locked in SwapGuard escrow. Funds will only release when the seller confirms payment receipt.
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <span class="security-chip">🔒 Multi-sig</span>
+          <span class="security-chip">⏱️ 24h Dispute</span>
+          <span class="security-chip">🤝 Arbitration</span>
+        </div>
+      </div>
+      ${t.status !== 'released' && t.status !== 'disputed' ? `
+      <div style="padding:0 16px 16px">
+        <button class="btn btn-danger" id="open-dispute">⚠️ Open Dispute</button>
+      </div>` : ''}
+    </div>
+  </div>`;
 }
 
 // ───────────────────────────────────────────────────────────
-// PATCH bindEvents for rating and notification
+// FULL bindEvents (replaces original)
 // ───────────────────────────────────────────────────────────
-const _bindEvents_orig = bindEvents;
 function bindEvents(){
-  _bindEvents_orig();
-  // open rating from escrow page
+  // Navigation
+  document.querySelectorAll('[data-nav]').forEach(el=>
+    el.addEventListener('click',()=>{ state.page=el.dataset.nav; render(); }));
+
+  // Landing
+  const ctaStart = document.getElementById('cta-start');
+  if(ctaStart) ctaStart.addEventListener('click',()=>{ state.page=state.user?'p2p':'auth'; render(); });
+  const ctaBrowse = document.getElementById('cta-browse');
+  if(ctaBrowse) ctaBrowse.addEventListener('click',()=>{ state.page=state.user?'p2p':'auth'; render(); });
+
+  // Auth tabs
+  const tabLogin = document.getElementById('tab-login');
+  if(tabLogin) tabLogin.addEventListener('click',()=>{ state.authTab='login'; render(); });
+  const tabSignup = document.getElementById('tab-signup');
+  if(tabSignup) tabSignup.addEventListener('click',()=>{ state.authTab='signup'; render(); });
+
+  // Telegram auth
+  const tgAuth = document.getElementById('tg-auth');
+  if(tgAuth) tgAuth.addEventListener('click',()=>{
+    state.user = { username: tgUser?.username||tgUser?.first_name||'TGUser', email:'telegram@user', completedTrades:0, rating:'New' };
+    state.page='p2p'; render(); toast('Welcome! 🎉');
+  });
+
+  // Auth form fields
+  ['f-username','f-email','f-password'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', e=>{
+      const key = id.replace('f-','');
+      if(state.authTab==='login') state.loginForm[key]=e.target.value;
+      else state.signupForm[key]=e.target.value;
+    });
+  });
+
+  const togglePw = document.getElementById('toggle-pw');
+  if(togglePw) togglePw.addEventListener('click',()=>{ state.showPassword=!state.showPassword; render(); });
+
+  const authSubmit = document.getElementById('auth-submit');
+  if(authSubmit) authSubmit.addEventListener('click',()=>{
+    if(state.authTab==='login'){
+      const {email, password} = state.loginForm;
+      if(!email||!password){ toast('Please fill in all fields','error'); return; }
+      state.user = { username: email.split('@')[0]||'Trader', email, completedTrades:0, rating:'New' };
+      state.page='p2p'; render(); toast('Signed in! 🎉');
+    } else {
+      const {username, email, password} = state.signupForm;
+      if(!username||!email||!password){ toast('Fill in all fields','error'); return; }
+      if(password.length<8){ toast('Password must be 8+ characters','error'); return; }
+      state.user = { username, email, completedTrades:0, rating:'New' };
+      state.page='p2p'; render(); toast('Account created! 🎉');
+    }
+  });
+
+  // P2P tabs/filters
+  const tabBuy = document.getElementById('p2p-tab-buy');
+  if(tabBuy) tabBuy.addEventListener('click',()=>{ state.p2pTab='buy'; render(); });
+  const tabSell = document.getElementById('p2p-tab-sell');
+  if(tabSell) tabSell.addEventListener('click',()=>{ state.p2pTab='sell'; render(); });
+
+  document.querySelectorAll('[data-coin]').forEach(el=>
+    el.addEventListener('click',()=>{ state.p2pCoin=el.dataset.coin; render(); }));
+
+  // Offer cards
+  document.querySelectorAll('[data-offer]').forEach(el=>{
+    el.addEventListener('click', e=>{
+      if(e.target.dataset.trade) return;
+      if(!state.user){ state.page='auth'; render(); return; }
+      const offer = state.offers.find(o=>o.id===el.dataset.offer);
+      if(offer){ state.activeOffer=offer; state.tradeModal=true; state.tradeForm={amount:'',payMethod:offer.payMethods[0]}; render(); }
+    });
+  });
+
+  document.querySelectorAll('[data-trade]').forEach(el=>{
+    el.addEventListener('click', e=>{
+      e.stopPropagation();
+      if(!state.user){ state.page='auth'; render(); return; }
+      const offer = state.offers.find(o=>o.id===el.dataset.trade);
+      if(offer){ state.activeOffer=offer; state.tradeModal=true; state.tradeForm={amount:'',payMethod:offer.payMethods[0]}; render(); }
+    });
+  });
+
+  // Modal
+  const modalOverlay = document.getElementById('modal-overlay');
+  if(modalOverlay) modalOverlay.addEventListener('click', e=>{
+    if(e.target===modalOverlay){ state.tradeModal=false; render(); }
+  });
+  const closeModal = document.getElementById('close-modal');
+  if(closeModal) closeModal.addEventListener('click',()=>{ state.tradeModal=false; render(); });
+
+  const tradeAmtEl = document.getElementById('trade-amount');
+  if(tradeAmtEl) tradeAmtEl.addEventListener('input', e=>{ state.tradeForm.amount=e.target.value; render(); });
+  const tradePayEl = document.getElementById('trade-pay');
+  if(tradePayEl) tradePayEl.addEventListener('change', e=>{ state.tradeForm.payMethod=e.target.value; render(); });
+
+  const confirmTrade = document.getElementById('confirm-trade');
+  if(confirmTrade) confirmTrade.addEventListener('click',()=>{
+    const o = state.activeOffer;
+    const amt = parseFloat(state.tradeForm.amount);
+    const cryptoAmt = (amt/o.price).toFixed(8);
+    const fee = (amt*0.005).toFixed(2);
+    const trade = {
+      id: 'TRD-'+Date.now().toString(36).toUpperCase(),
+      type: o.type, coin: o.coin,
+      fiatAmt: amt.toFixed(2), cryptoAmt, fee,
+      rate: o.price, payMethod: state.tradeForm.payMethod,
+      counterparty: o.username,
+      status: 'created', role: 'buyer', messages: [],
+      date: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+    };
+    state.trades.unshift(trade);
+    state.escrowTrade = trade;
+    state.tradeModal = false;
+    state.page = 'escrow';
+    render();
+    toast(`Escrow opened! 🔐 ${trade.id}`);
+  });
+
+  // Escrow actions
+  const lockEscrow = document.getElementById('lock-escrow');
+  if(lockEscrow) lockEscrow.addEventListener('click',()=>{ state.escrowTrade.status='locked'; updateTrade(); render(); toast('Locked in escrow! 🔐'); });
+  const confirmPaid = document.getElementById('confirm-paid');
+  if(confirmPaid) confirmPaid.addEventListener('click',()=>{ state.escrowTrade.status='paid'; updateTrade(); render(); toast('Payment confirmed! ⏳'); });
+  const releaseEscrow = document.getElementById('release-escrow');
+  if(releaseEscrow) releaseEscrow.addEventListener('click',()=>{ state.escrowTrade.status='released'; updateTrade(); render(); toast('Trade complete! 🎉'); });
+  const openDispute = document.getElementById('open-dispute');
+  if(openDispute) openDispute.addEventListener('click',()=>{ state.escrowTrade.status='disputed'; updateTrade(); render(); toast('Dispute opened ⚠️','error'); });
+  const backP2p = document.getElementById('back-p2p');
+  if(backP2p) backP2p.addEventListener('click',()=>{ state.page='p2p'; render(); });
+
+  // Trade view
+  document.querySelectorAll('[data-trade-view]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const t = state.trades.find(x=>x.id===el.dataset.tradeView);
+      if(t){ state.escrowTrade=t; state.page='escrow'; render(); }
+    });
+  });
+
+  // Profile
+  const logoutBtn = document.getElementById('logout-btn');
+  if(logoutBtn) logoutBtn.addEventListener('click',()=>{ state.user=null; state.page='landing'; render(); toast('Logged out','info'); });
+  const goP2p = document.getElementById('go-p2p');
+  if(goP2p) goP2p.addEventListener('click',()=>{ state.page='p2p'; render(); });
+
+  // Post offer
+  const createOffer = document.getElementById('create-offer');
+  if(createOffer) createOffer.addEventListener('click',()=>{
+    if(!state.user){ state.page='auth'; render(); return; }
+    state.postOfferModal=true; render();
+  });
+  const closePost = document.getElementById('close-post-modal');
+  if(closePost) closePost.addEventListener('click',()=>{ state.postOfferModal=false; render(); });
+
+  ['po-type','po-coin','po-price','po-min','po-max'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('change',e=>{ state.postForm[id.replace('po-','')]=e.target.value; render(); });
+    el.addEventListener('input', e=>{ state.postForm[id.replace('po-','')]=e.target.value; render(); });
+  });
+
+  document.querySelectorAll('.po-pay-chip').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const m=el.dataset.pay, arr=state.postForm.payMethods, idx=arr.indexOf(m);
+      if(idx>=0) arr.splice(idx,1); else arr.push(m);
+      render();
+    });
+  });
+
+  const submitPost = document.getElementById('submit-post-offer');
+  if(submitPost) submitPost.addEventListener('click',()=>{
+    const f=state.postForm;
+    if(!f.price||!f.min||!f.max){ toast('Fill in all fields','error'); return; }
+    if(parseFloat(f.min)>=parseFloat(f.max)){ toast('Min must be less than Max','error'); return; }
+    if(!f.payMethods.length){ toast('Select a payment method','error'); return; }
+    const newOffer = {
+      id:'OFF-'+Math.random().toString(36).substr(2,6).toUpperCase(),
+      type:f.type, coin:f.coin, price:parseFloat(f.price),
+      minAmount:parseFloat(f.min), maxAmount:parseFloat(f.max),
+      payMethods:[...f.payMethods], username:state.user.username,
+      trades:0, completion:100, rating:5.0, avgTime:15, online:true, ownerId:state.user.id||0,
+    };
+    state.offers.unshift(newOffer);
+    state.postOfferModal=false;
+    state.p2pCoin=newOffer.coin; state.p2pTab=newOffer.type; state.page='p2p';
+    render(); toast(`Offer posted! 🎉`);
+  });
+
+  // Chat
+  const chatSend = document.getElementById('chat-send');
+  if(chatSend) chatSend.addEventListener('click',()=>sendChatMsg());
+  const chatInput = document.getElementById('chat-input');
+  if(chatInput) chatInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); sendChatMsg(); }});
+
+  // Rating
+  const closeRating = document.getElementById('close-rating-modal');
+  if(closeRating) closeRating.addEventListener('click',()=>{ state.ratingModal=false; render(); });
+  document.querySelectorAll('.rating-star-btn').forEach(el=>{
+    el.addEventListener('click',()=>{ state.pendingRating=parseInt(el.dataset.star); render(); });
+  });
+  const submitRating = document.getElementById('submit-rating');
+  if(submitRating) submitRating.addEventListener('click',()=>{ state.ratingModal=false; toast(`Rated ⭐ ${state.pendingRating}/5`); render(); });
   const openRating = document.getElementById('open-rating-btn');
   if(openRating) openRating.addEventListener('click',()=>{ state.ratingModal=true; state.pendingRating=0; render(); });
-  // mark notifications read when panel opens
+
+  // Notifications
+  const notifBell = document.getElementById('notif-bell');
+  if(notifBell) notifBell.addEventListener('click',()=>{ state.notifOpen=!state.notifOpen; render(); });
+  const closeNotif = document.getElementById('close-notif');
+  if(closeNotif) closeNotif.addEventListener('click',()=>{ state.notifOpen=false; render(); });
   if(state.notifOpen) state.notifications.forEach(n=>n.read=true);
 }
 
 // ───────────────────────────────────────────────────────────
 // INIT
 // ───────────────────────────────────────────────────────────
+try {
+  // Extra state fields
+  Object.assign(state, {
+    postOfferModal: false,
+    ratingModal:    false,
+    pendingRating:  0,
+    notifOpen:      false,
+    notifications:  [
+      { id:1, type:'system', title:'Welcome to SwapGuard!', body:'Secure P2P crypto escrow is now live.', time:'Just now', read:false },
+      { id:2, type:'trade',  title:'New: Trade Chat', body:'Coordinate with your counterparty inside each trade.', time:'2m ago', read:false },
+    ],
+    postForm: { type:'sell', coin:'BTC', price:'', min:'', max:'', payMethods:[] },
+  });
 
-// Extra state fields
-Object.assign(state, {
-  postOfferModal: false,
-  ratingModal:    false,
-  pendingRating:  0,
-  notifOpen:      false,
-  notifications:  [
-    { id:1, type:'system',  title:'Welcome to SwapGuard!', body:'Secure P2P crypto escrow is now live. Start trading safely.',    time:'Just now', read:false },
-    { id:2, type:'trade',   title:'New feature: Trade Chat', body:'Coordinate directly with your counterparty inside each trade.', time:'2m ago',   read:false },
-  ],
-  postForm: { type:'sell', coin:'BTC', price:'', min:'', max:'', payMethods:[] },
-});
+  // Auto-login from Telegram
+  if(tgUser){
+    state.user = {
+      id:              tgUser.id,
+      username:        tgUser.username || tgUser.first_name || 'TGUser',
+      email:           'telegram@user',
+      completedTrades: 0,
+      rating:          'New',
+    };
+    state.page = 'p2p';
+  } else {
+    state.page = 'landing';
+  }
 
-// Auto-login from Telegram user data
-if(tgUser){
-  state.user = {
-    id:              tgUser.id,
-    username:        tgUser.username || tgUser.first_name || 'TGUser',
-    email:           'telegram@user',
-    completedTrades: 0,
-    rating:          'New',
-  };
-  state.page = 'p2p';
+  render();
+
+  // Live price ticks every 15s
+  setInterval(()=>{
+    COINS.forEach(c=>{ PRICES[c]=+(PRICES[c]*(1+(Math.random()-.5)*.004)).toFixed(c==='USDT'?4:2); });
+    if(state.page==='p2p'&&!state.tradeModal) render();
+  }, 15000);
+
+} catch(err) {
+  document.body.style.background = '#0a0b0f';
+  document.body.style.color = '#00e5a0';
+  document.body.style.fontFamily = 'monospace';
+  document.body.style.padding = '20px';
+  document.body.innerHTML = '<h2>Error</h2><pre>'+err.stack+'</pre>';
 }
-
-render();
-
-// Simulate live price ticks every 15s
-setInterval(()=>{
-  COINS.forEach(c=>{ PRICES[c]=+(PRICES[c]*(1+(Math.random()-.5)*.004)).toFixed(c==='USDT'?4:2); });
-  // Only re-render ticker if on p2p page and not mid-modal
-  if(state.page==='p2p'&&!state.tradeModal) render();
-},15000);
 </script>
 </body>
 </html>
