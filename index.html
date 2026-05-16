@@ -8,369 +8,193 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #0a0b0f;
-    --surface: #111318;
-    --surface2: #181c25;
-    --border: #1e2535;
-    --border2: #252d3f;
-    --accent: #00e5a0;
-    --accent2: #0070f3;
-    --accent3: #f7931a;
-    --danger: #ff4560;
-    --warn: #ffb800;
-    --text: #e8ecf4;
-    --text2: #7e8ea8;
-    --text3: #4a556a;
-    --mono: 'Space Mono', monospace;
-    --sans: 'Syne', sans-serif;
-    --radius: 14px;
-    --radius-sm: 8px;
-    --tg-color-scheme: dark;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--sans); }
-  #root { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
-
-  /* Scrollable pages */
-  .page { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 80px; }
-  .page::-webkit-scrollbar { display: none; }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(0,229,160,.3); } 50% { box-shadow: 0 0 0 8px rgba(0,229,160,0); } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
-  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  @keyframes countup { from { opacity: 0; transform: scale(.8); } to { opacity:1; transform: scale(1); } }
-  @keyframes glow { 0%,100% { text-shadow: 0 0 20px rgba(0,229,160,.4); } 50% { text-shadow: 0 0 40px rgba(0,229,160,.8), 0 0 80px rgba(0,229,160,.3); } }
-
-  .fade-up { animation: fadeUp .4s ease forwards; }
-  .fade-up-1 { animation: fadeUp .4s .05s ease both; }
-  .fade-up-2 { animation: fadeUp .4s .1s ease both; }
-  .fade-up-3 { animation: fadeUp .4s .15s ease both; }
-  .fade-up-4 { animation: fadeUp .4s .2s ease both; }
-  .fade-up-5 { animation: fadeUp .4s .25s ease both; }
-
-  /* ── BOTTOM NAV ── */
-  .bottom-nav {
-    display: flex; align-items: center; justify-content: space-around;
-    height: 64px; background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 0 8px; flex-shrink: 0;
-    position: relative; z-index: 100;
-  }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-    padding: 8px 4px; background: none; border: none; cursor: pointer;
-    color: var(--text3); font-family: var(--sans); font-size: 10px; font-weight: 600;
-    transition: color .2s; letter-spacing: .5px; text-transform: uppercase;
-  }
-  .nav-btn.active { color: var(--accent); }
-  .nav-btn svg { width: 22px; height: 22px; }
-
-  /* ── TOPBAR ── */
-  .topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 16px 10px; flex-shrink: 0;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-  }
-  .topbar-logo { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent); letter-spacing: 1px; }
-  .topbar-logo span { color: var(--text2); }
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 8px; border-radius: 20px;
-    font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-  }
-  .badge-green { background: rgba(0,229,160,.12); color: var(--accent); border: 1px solid rgba(0,229,160,.2); }
-  .badge-blue { background: rgba(0,112,243,.12); color: var(--accent2); border: 1px solid rgba(0,112,243,.2); }
-  .badge-orange { background: rgba(247,147,26,.12); color: var(--accent3); border: 1px solid rgba(247,147,26,.2); }
-  .badge-red { background: rgba(255,69,96,.12); color: var(--danger); border: 1px solid rgba(255,69,96,.2); }
-  .badge-gray { background: rgba(126,142,168,.1); color: var(--text2); border: 1px solid var(--border); }
-
-  /* ── BUTTONS ── */
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 14px 24px; border-radius: var(--radius); border: none; cursor: pointer;
-    font-family: var(--sans); font-weight: 700; font-size: 15px; letter-spacing: .3px;
-    transition: all .2s; width: 100%;
-  }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-primary:active { transform: scale(.97); background: #00cc8e; }
-  .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
-  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
-  .btn-secondary:active { transform: scale(.97); }
-  .btn-danger { background: rgba(255,69,96,.15); color: var(--danger); border: 1px solid rgba(255,69,96,.3); }
-  .btn-danger:active { transform: scale(.97); }
-  .btn-sm { padding: 9px 16px; font-size: 13px; border-radius: var(--radius-sm); width: auto; }
-  .btn-ghost { background: none; color: var(--text2); border: 1px solid var(--border); }
-
-  /* ── CARDS ── */
-  .card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 16px; margin: 0 16px 12px;
-  }
-  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .card-title { font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; }
-
-  /* ── INPUTS ── */
-  .input-group { margin-bottom: 14px; }
-  .input-label { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 6px; display: block; }
-  .input {
-    width: 100%; padding: 13px 14px; background: var(--surface2);
-    border: 1px solid var(--border2); border-radius: var(--radius-sm);
-    color: var(--text); font-family: var(--sans); font-size: 15px;
-    outline: none; transition: border-color .2s;
-  }
-  .input:focus { border-color: var(--accent); }
-  .input::placeholder { color: var(--text3); }
-  .input-row { display: flex; gap: 8px; }
-  .input-row .input-group { flex: 1; }
-
-  /* ── CRYPTO TICKER ── */
-  .ticker-wrap { overflow: hidden; background: var(--surface); border-bottom: 1px solid var(--border); padding: 8px 0; flex-shrink: 0; }
-  .ticker-track { display: flex; width: max-content; animation: ticker 28s linear infinite; }
-  .ticker-item { display: flex; align-items: center; gap: 6px; padding: 0 20px; font-family: var(--mono); font-size: 11px; white-space: nowrap; }
-  .ticker-up { color: var(--accent); }
-  .ticker-down { color: var(--danger); }
-
-  /* ── LANDING ── */
-  .landing-hero { padding: 28px 20px 20px; text-align: center; }
-  .landing-logo-big { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--accent); letter-spacing: 2px; animation: glow 3s ease-in-out infinite; }
-  .landing-tagline { font-size: 13px; color: var(--text2); margin-top: 6px; letter-spacing: .3px; }
-  .stats-row { display: flex; gap: 10px; padding: 0 16px; margin-bottom: 16px; }
-  .stat-card { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 10px; text-align: center; }
-  .stat-value { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text); }
-  .stat-label { font-size: 10px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: .5px; }
-  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px; margin-bottom: 16px; }
-  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 12px; }
-  .feature-icon { font-size: 22px; margin-bottom: 8px; }
-  .feature-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .feature-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
-  .how-steps { padding: 0 16px; }
-  .step { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--border); }
-  .step:last-child { border-bottom: none; }
-  .step-num { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,229,160,.12); border: 1px solid rgba(0,229,160,.3); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
-  .step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-  .step-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
-  .section-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 16px 16px 10px; }
-  .cta-block { padding: 0 16px 12px; display: flex; flex-direction: column; gap: 10px; }
-
-  /* ── AUTH ── */
-  .auth-wrap { padding: 24px 20px; }
-  .auth-title { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
-  .auth-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.5; }
-  .tab-row { display: flex; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 24px; gap: 4px; }
-  .tab-btn { flex: 1; padding: 9px; border-radius: 6px; border: none; cursor: pointer; font-family: var(--sans); font-size: 13px; font-weight: 700; background: none; color: var(--text2); transition: all .2s; }
-  .tab-btn.active { background: var(--surface); color: var(--accent); border: 1px solid var(--border2); }
-  .divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; }
-  .divider-line { flex: 1; height: 1px; background: var(--border); }
-  .divider-text { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; }
-  .tg-auth-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; background: rgba(41,182,246,.1); border: 1px solid rgba(41,182,246,.25); border-radius: var(--radius-sm); cursor: pointer; color: #29b6f6; font-family: var(--sans); font-size: 14px; font-weight: 700; transition: all .2s; width: 100%; }
-  .tg-auth-btn:active { transform: scale(.97); }
-  .terms-text { font-size: 11px; color: var(--text3); text-align: center; margin-top: 16px; line-height: 1.6; }
-  .terms-text a { color: var(--accent); text-decoration: none; }
-  .input-with-icon { position: relative; }
-  .input-with-icon .input { padding-right: 44px; }
-  .input-eye { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text3); padding: 4px; }
-  .strength-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 6px; overflow: hidden; }
-  .strength-fill { height: 100%; border-radius: 2px; transition: width .3s, background .3s; }
-
-  /* ── P2P ── */
-  .filter-row { display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; flex-shrink: 0; }
-  .filter-row::-webkit-scrollbar { display: none; }
-  .filter-chip { padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border2); background: var(--surface); color: var(--text2); font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all .2s; letter-spacing: .3px; }
-  .filter-chip.active { background: rgba(0,229,160,.12); color: var(--accent); border-color: rgba(0,229,160,.3); }
-  .offer-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 14px 16px; margin: 0 16px 10px;
-    cursor: pointer; transition: border-color .2s, transform .15s;
-  }
-  .offer-card:active { transform: scale(.99); border-color: var(--border2); }
-  .offer-card.buy-card:hover, .offer-card.buy-card:focus { border-color: rgba(0,229,160,.3); }
-  .offer-card.sell-card:hover, .offer-card.sell-card:focus { border-color: rgba(255,69,96,.3); }
-  .offer-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .offer-user { display: flex; align-items: center; gap: 8px; }
-  .user-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
-  .user-name { font-size: 14px; font-weight: 700; color: var(--text); }
-  .user-meta { font-size: 11px; color: var(--text2); margin-top: 1px; }
-  .offer-price { font-family: var(--mono); font-size: 18px; font-weight: 700; text-align: right; }
-  .offer-currency { font-size: 11px; color: var(--text2); text-align: right; margin-top: 1px; }
-  .offer-details { display: flex; gap: 12px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 2px; }
-  .offer-detail { flex: 1; }
-  .detail-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
-  .detail-value { font-size: 13px; font-weight: 700; color: var(--text); font-family: var(--mono); }
-  .offer-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-
-  /* ── TRADE MODAL ── */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 200; display: flex; flex-direction: column; justify-content: flex-end; }
-  .modal-sheet {
-    background: var(--surface); border-radius: 20px 20px 0 0;
-    border-top: 1px solid var(--border2); max-height: 92vh;
-    overflow-y: auto; padding-bottom: 24px;
-    animation: fadeUp .25s ease;
-  }
-  .modal-sheet::-webkit-scrollbar { display: none; }
-  .modal-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 12px auto; }
-  .modal-title { font-size: 18px; font-weight: 800; color: var(--text); padding: 0 20px 16px; border-bottom: 1px solid var(--border); }
-  .modal-body { padding: 16px 20px; }
-  .trade-summary { background: var(--surface2); border-radius: var(--radius); padding: 14px; margin-bottom: 16px; border: 1px solid var(--border); }
-  .trade-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
-  .trade-row + .trade-row { border-top: 1px solid var(--border); }
-  .trade-key { font-size: 12px; color: var(--text2); }
-  .trade-val { font-size: 13px; font-weight: 700; color: var(--text); font-family: var(--mono); }
-  .escrow-info { background: rgba(0,229,160,.07); border: 1px solid rgba(0,229,160,.2); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; }
-  .escrow-info-title { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .escrow-info-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
-
-  /* ── ESCROW STATUS ── */
-  .escrow-progress { display: flex; align-items: center; padding: 0 16px; margin-bottom: 16px; }
-  .escrow-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
-  .escrow-step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; z-index: 1; border: 2px solid var(--border); background: var(--surface2); color: var(--text3); transition: all .3s; }
-  .escrow-step-dot.done { background: var(--accent); border-color: var(--accent); color: #000; }
-  .escrow-step-dot.active { border-color: var(--accent); color: var(--accent); animation: pulse 2s infinite; }
-  .escrow-step-label { font-size: 9px; color: var(--text3); margin-top: 5px; text-align: center; text-transform: uppercase; letter-spacing: .4px; }
-  .escrow-step-label.active { color: var(--accent); }
-  .escrow-line { flex: 1; height: 2px; background: var(--border); margin-top: -14px; }
-  .escrow-line.done { background: var(--accent); }
-
-  /* ── PROFILE ── */
-  .profile-header { padding: 24px 20px 16px; display: flex; gap: 16px; align-items: center; border-bottom: 1px solid var(--border); }
-  .profile-avatar-big { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; border: 2px solid var(--accent); }
-  .profile-name { font-size: 20px; font-weight: 800; color: var(--text); }
-  .profile-handle { font-family: var(--mono); font-size: 12px; color: var(--text2); margin-top: 3px; }
-  .profile-stats { display: flex; gap: 20px; margin-top: 10px; }
-  .pstat-val { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--text); }
-  .pstat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; }
-  .menu-item { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
-  .menu-item:active { background: var(--surface2); }
-  .menu-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-  .menu-text { flex: 1; }
-  .menu-title { font-size: 14px; font-weight: 700; color: var(--text); }
-  .menu-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .menu-arrow { color: var(--text3); }
-
-  /* ── MY TRADES ── */
-  .trade-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
-  .trade-item:active { background: var(--surface2); }
-  .trade-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .trade-info { flex: 1; }
-  .trade-title { font-size: 14px; font-weight: 700; color: var(--text); }
-  .trade-date { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .trade-amount { text-align: right; }
-  .trade-crypto { font-family: var(--mono); font-size: 14px; font-weight: 700; }
-  .trade-fiat { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-  /* ── LOADING ── */
-  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
-  .loading-center { display: flex; align-items: center; justify-content: center; padding: 40px; }
-  .skeleton { background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%); background-size: 400px 100%; animation: shimmer 1.2s infinite; border-radius: 6px; }
-
-  /* ── TOAST ── */
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999; padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; white-space: nowrap; animation: fadeUp .3s ease; }
-  .toast-success { background: rgba(0,229,160,.9); color: #000; }
-  .toast-error { background: rgba(255,69,96,.9); color: #fff; }
-  .toast-info { background: rgba(0,112,243,.9); color: #fff; }
-
-  /* ── MISC ── */
-  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; gap: 12px; }
-  .empty-icon { font-size: 44px; opacity: .4; }
-  .empty-text { font-size: 14px; color: var(--text2); text-align: center; line-height: 1.6; }
-  .rating-stars { display: flex; gap: 2px; }
-  .star { color: var(--warn); font-size: 12px; }
-  .online-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
-  .verified-badge { color: var(--accent2); font-size: 12px; }
-  .amount-calc { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
-  .amount-calc-row { display: flex; justify-content: space-between; align-items: center; }
-  .amount-calc-row + .amount-calc-row { border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
-  .calc-label { font-size: 12px; color: var(--text2); }
-  .calc-value { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--text); }
-  .calc-total { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); }
-  .security-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text3); padding: 3px 8px; border: 1px solid var(--border); border-radius: 12px; }
-  select.input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%237e8ea8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 38px; cursor: pointer; }
-  .warning-box { background: rgba(255,184,0,.07); border: 1px solid rgba(255,184,0,.25); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; color: var(--warn); margin-bottom: 14px; line-height: 1.6; }
-  .info-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .info-row:last-child { border-bottom: none; }
-  .info-label { color: var(--text3); width: 100px; flex-shrink: 0; }
+:root{--bg:#0a0b0f;--surface:#111318;--surface2:#181c25;--border:#1e2535;--border2:#252d3f;--accent:#00e5a0;--accent2:#0070f3;--accent3:#f7931a;--danger:#ff4560;--warn:#ffb800;--text:#e8ecf4;--text2:#7e8ea8;--text3:#4a556a;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif;--radius:14px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans);}
+#root{height:100%;display:flex;flex-direction:column;overflow:hidden;}
+.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:80px;}
+.page::-webkit-scrollbar{display:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,160,.3)}50%{box-shadow:0 0 0 8px rgba(0,229,160,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(0,229,160,.4)}50%{text-shadow:0 0 40px rgba(0,229,160,.8)}}
+.fade-up{animation:fadeUp .4s ease forwards}
+.fade-up-1{animation:fadeUp .4s .05s ease both}
+.fade-up-2{animation:fadeUp .4s .1s ease both}
+.fade-up-3{animation:fadeUp .4s .15s ease both}
+.fade-up-4{animation:fadeUp .4s .2s ease both}
+.bottom-nav{display:flex;align-items:center;justify-content:space-around;height:64px;background:var(--surface);border-top:1px solid var(--border);padding:0 8px;flex-shrink:0;position:relative;z-index:100;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;background:none;border:none;cursor:pointer;color:var(--text3);font-family:var(--sans);font-size:10px;font-weight:600;transition:color .2s;letter-spacing:.5px;text-transform:uppercase;}
+.nav-btn.active{color:var(--accent);}
+.nav-btn svg{width:22px;height:22px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--bg);}
+.topbar-logo{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--accent);letter-spacing:1px;}
+.topbar-logo span{color:var(--text2);}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.badge-green{background:rgba(0,229,160,.12);color:var(--accent);border:1px solid rgba(0,229,160,.2);}
+.badge-blue{background:rgba(0,112,243,.12);color:var(--accent2);border:1px solid rgba(0,112,243,.2);}
+.badge-red{background:rgba(255,69,96,.12);color:var(--danger);border:1px solid rgba(255,69,96,.2);}
+.badge-gray{background:rgba(126,142,168,.1);color:var(--text2);border:1px solid var(--border);}
+.badge-orange{background:rgba(247,147,26,.12);color:var(--accent3);border:1px solid rgba(247,147,26,.2);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--sans);font-weight:700;font-size:15px;transition:all .2s;width:100%;}
+.btn-primary{background:var(--accent);color:#000;}
+.btn-primary:active{transform:scale(.97);background:#00cc8e;}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border2);}
+.btn-secondary:active{transform:scale(.97);}
+.btn-danger{background:rgba(255,69,96,.15);color:var(--danger);border:1px solid rgba(255,69,96,.3);}
+.btn-sm{padding:9px 16px;font-size:13px;border-radius:var(--radius-sm);width:auto;}
+.btn-ghost{background:none;color:var(--text2);border:1px solid var(--border);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:0 16px 12px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.card-title{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;}
+.input-group{margin-bottom:14px;}
+.input-label{font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:block;}
+.input{width:100%;padding:13px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:var(--sans);font-size:15px;outline:none;transition:border-color .2s;}
+.input:focus{border-color:var(--accent);}
+.input::placeholder{color:var(--text3);}
+.input-row{display:flex;gap:8px;}
+.input-row .input-group{flex:1;}
+select.input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%237e8ea8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:38px;cursor:pointer;}
+.ticker-wrap{overflow:hidden;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 0;flex-shrink:0;}
+.ticker-track{display:flex;width:max-content;animation:ticker 28s linear infinite;}
+.ticker-item{display:flex;align-items:center;gap:6px;padding:0 20px;font-family:var(--mono);font-size:11px;white-space:nowrap;}
+.ticker-up{color:var(--accent);}
+.ticker-down{color:var(--danger);}
+.landing-hero{padding:28px 20px 20px;text-align:center;}
+.landing-logo-big{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);letter-spacing:2px;animation:glow 3s ease-in-out infinite;}
+.landing-tagline{font-size:13px;color:var(--text2);margin-top:6px;}
+.stats-row{display:flex;gap:10px;padding:0 16px;margin-bottom:16px;}
+.stat-card{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;}
+.stat-value{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--text);}
+.stat-label{font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:.5px;}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:16px;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;}
+.feature-icon{font-size:22px;margin-bottom:8px;}
+.feature-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.feature-desc{font-size:11px;color:var(--text2);line-height:1.5;}
+.how-steps{padding:0 16px;}
+.step{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,160,.12);border:1px solid rgba(0,229,160,.3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0;}
+.step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+.section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:16px 16px 10px;}
+.cta-block{padding:0 16px 12px;display:flex;flex-direction:column;gap:10px;}
+.auth-wrap{padding:24px 20px;}
+.auth-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.auth-subtitle{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.5;}
+.tab-row{display:flex;background:var(--surface2);border-radius:var(--radius-sm);padding:4px;margin-bottom:24px;gap:4px;}
+.tab-btn{flex:1;padding:9px;border-radius:6px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:700;background:none;color:var(--text2);transition:all .2s;}
+.tab-btn.active{background:var(--surface);color:var(--accent);border:1px solid var(--border2);}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-text{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.tg-auth-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;background:rgba(41,182,246,.1);border:1px solid rgba(41,182,246,.25);border-radius:var(--radius-sm);cursor:pointer;color:#29b6f6;font-family:var(--sans);font-size:14px;font-weight:700;transition:all .2s;width:100%;}
+.terms-text{font-size:11px;color:var(--text3);text-align:center;margin-top:16px;line-height:1.6;}
+.terms-text a{color:var(--accent);text-decoration:none;}
+.input-with-icon{position:relative;}
+.input-with-icon .input{padding-right:44px;}
+.input-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;}
+.strength-bar{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;}
+.strength-fill{height:100%;border-radius:2px;transition:width .3s,background .3s;}
+.filter-row{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;flex-shrink:0;}
+.filter-row::-webkit-scrollbar{display:none;}
+.filter-chip{padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.filter-chip.active{background:rgba(0,229,160,.12);color:var(--accent);border-color:rgba(0,229,160,.3);}
+.offer-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:0 16px 10px;cursor:pointer;transition:border-color .2s;}
+.offer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.offer-user{display:flex;align-items:center;gap:8px;}
+.user-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
+.user-name{font-size:14px;font-weight:700;color:var(--text);}
+.user-meta{font-size:11px;color:var(--text2);margin-top:1px;}
+.offer-price{font-family:var(--mono);font-size:18px;font-weight:700;text-align:right;}
+.offer-currency{font-size:11px;color:var(--text2);text-align:right;margin-top:1px;}
+.offer-details{display:flex;gap:12px;border-top:1px solid var(--border);padding-top:10px;margin-top:2px;}
+.offer-detail{flex:1;}
+.detail-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.detail-value{font-size:13px;font-weight:700;color:var(--text);font-family:var(--mono);}
+.offer-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;flex-direction:column;justify-content:flex-end;}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);max-height:92vh;overflow-y:auto;padding-bottom:24px;animation:fadeUp .25s ease;}
+.modal-sheet::-webkit-scrollbar{display:none;}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto;}
+.modal-title{font-size:18px;font-weight:800;color:var(--text);padding:0 20px 16px;border-bottom:1px solid var(--border);}
+.modal-body{padding:16px 20px;}
+.trade-summary{background:var(--surface2);border-radius:var(--radius);padding:14px;margin-bottom:16px;border:1px solid var(--border);}
+.trade-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;}
+.trade-row+.trade-row{border-top:1px solid var(--border);}
+.trade-key{font-size:12px;color:var(--text2);}
+.trade-val{font-size:13px;font-weight:700;color:var(--text);font-family:var(--mono);}
+.escrow-info{background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.2);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;}
+.escrow-info-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;}
+.escrow-info-text{font-size:12px;color:var(--text2);line-height:1.6;}
+.escrow-progress{display:flex;align-items:center;padding:0 16px;margin-bottom:16px;}
+.escrow-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.escrow-step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;z-index:1;border:2px solid var(--border);background:var(--surface2);color:var(--text3);transition:all .3s;}
+.escrow-step-dot.done{background:var(--accent);border-color:var(--accent);color:#000;}
+.escrow-step-dot.active{border-color:var(--accent);color:var(--accent);animation:pulse 2s infinite;}
+.escrow-step-label{font-size:9px;color:var(--text3);margin-top:5px;text-align:center;text-transform:uppercase;letter-spacing:.4px;}
+.escrow-step-label.active{color:var(--accent);}
+.escrow-line{flex:1;height:2px;background:var(--border);margin-top:-14px;}
+.escrow-line.done{background:var(--accent);}
+.profile-header{padding:24px 20px 16px;display:flex;gap:16px;align-items:center;border-bottom:1px solid var(--border);}
+.profile-avatar-big{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;border:2px solid var(--accent);}
+.profile-name{font-size:20px;font-weight:800;color:var(--text);}
+.profile-handle{font-family:var(--mono);font-size:12px;color:var(--text2);margin-top:3px;}
+.profile-stats{display:flex;gap:20px;margin-top:10px;}
+.pstat-val{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text);}
+.pstat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.menu-item{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);cursor:pointer;}
+.menu-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.menu-text{flex:1;}
+.menu-title{font-size:14px;font-weight:700;color:var(--text);}
+.menu-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+.trade-item{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);cursor:pointer;}
+.trade-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.trade-info{flex:1;}
+.trade-title{font-size:14px;font-weight:700;color:var(--text);}
+.trade-date{font-size:11px;color:var(--text2);margin-top:2px;}
+.trade-amount{text-align:right;}
+.trade-crypto{font-family:var(--mono);font-size:14px;font-weight:700;}
+.trade-fiat{font-size:11px;color:var(--text2);margin-top:2px;}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:999;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap;animation:fadeUp .3s ease;}
+.toast-success{background:rgba(0,229,160,.9);color:#000;}
+.toast-error{background:rgba(255,69,96,.9);color:#fff;}
+.toast-info{background:rgba(0,112,243,.9);color:#fff;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;gap:12px;}
+.empty-icon{font-size:44px;opacity:.4;}
+.empty-text{font-size:14px;color:var(--text2);text-align:center;line-height:1.6;}
+.online-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
+.amount-calc{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+.amount-calc-row{display:flex;justify-content:space-between;align-items:center;}
+.amount-calc-row+.amount-calc-row{border-top:1px solid var(--border);padding-top:10px;margin-top:10px;}
+.calc-label{font-size:12px;color:var(--text2);}
+.calc-value{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text);}
+.calc-total{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent);}
+.security-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--text3);padding:3px 8px;border:1px solid var(--border);border-radius:12px;}
+.warning-box{background:rgba(255,184,0,.07);border:1px solid rgba(255,184,0,.25);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--warn);margin-bottom:14px;line-height:1.6;}
+.info-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);}
+.info-row:last-child{border-bottom:none;}
+.info-label{color:var(--text3);width:100px;flex-shrink:0;}
+.chat-bubble-me{display:flex;justify-content:flex-end;margin-bottom:6px;}
+.chat-bubble-them{display:flex;justify-content:flex-start;margin-bottom:6px;}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
-// ───────────────────────────────────────────────────────────
-// TELEGRAM WEB APP INIT
-// ───────────────────────────────────────────────────────────
-const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  tg.setHeaderColor('#0a0b0f');
-  tg.setBackgroundColor('#0a0b0f');
-}
-const tgUser = tg?.initDataUnsafe?.user;
+// ── TELEGRAM INIT ──────────────────────────────────────────
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+if(tg){ tg.ready(); tg.expand(); tg.setHeaderColor('#0a0b0f'); tg.setBackgroundColor('#0a0b0f'); }
+const tgUser = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
 
-// ───────────────────────────────────────────────────────────
-// STATE
-// ───────────────────────────────────────────────────────────
-let state = {
-  page: 'landing',        // landing | auth | p2p | escrow | profile
-  authTab: 'login',
-  p2pTab: 'buy',
-  p2pCoin: 'BTC',
-  user: null,
-  offers: generateOffers(),
-  trades: [],
-  activeOffer: null,
-  tradeModal: false,
-  escrowTrade: null,
-  toast: null,
-  loginForm: { email: '', password: '' },
-  signupForm: { username: '', email: '', password: '' },
-  tradeForm: { amount: '', payMethod: 'Bank Transfer' },
-  showPassword: false,
-  profileSection: 'main',
-};
-
-// ───────────────────────────────────────────────────────────
-// MOCK DATA
-// ───────────────────────────────────────────────────────────
+// ── CONSTANTS ──────────────────────────────────────────────
 const COINS = ['BTC','ETH','USDT','SOL','TON','MATIC'];
-const PRICES = { BTC: 67420, ETH: 3840, USDT: 1.00, SOL: 182, TON: 6.45, MATIC: 1.12 };
+const PRICES = {BTC:67420,ETH:3840,USDT:1.00,SOL:182,TON:6.45,MATIC:1.12};
 const PAY_METHODS = ['Bank Transfer','PayPal','Revolut','Wise','Cash App','Venmo','Zelle'];
 const COLORS = ['#00e5a0','#0070f3','#f7931a','#a855f7','#f43f5e','#06b6d4'];
-
-function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-function rndF(a,b,d=2){ return parseFloat((Math.random()*(b-a)+a).toFixed(d)); }
-function avatarColor(name){ return COLORS[name.charCodeAt(0)%COLORS.length]; }
-function initial(name){ return name[0].toUpperCase(); }
-
-const USERNAMES = ['CryptoKing','SatsStacker','TokyoDegen','EthWizard','SolSurfer','VaultMaster','PixelTrader','NakamotoFan','DeFiDave','ChainChaser','Blocksmith','TrustlessT'];
-function generateOffers(){
-  const offers = [];
-  COINS.forEach(coin => {
-    for(let i=0;i<6;i++){
-      const isBuy = i<3;
-      const price = PRICES[coin];
-      const premium = rndF(-0.02, 0.08);
-      const offerPrice = +(price*(1+premium)).toFixed(coin==='USDT'?4:2);
-      const username = USERNAMES[rnd(0,USERNAMES.length-1)];
-      offers.push({
-        id: `${coin}-${isBuy?'B':'S'}-${i}`,
-        type: isBuy ? 'buy' : 'sell',
-        coin, price: offerPrice,
-        minAmount: rnd(20,200), maxAmount: rnd(500,5000),
-        payMethods: [PAY_METHODS[rnd(0,PAY_METHODS.length-1)], PAY_METHODS[rnd(0,PAY_METHODS.length-1)]].filter((v,i,a)=>a.indexOf(v)===i),
-        username,
-        trades: rnd(12,890), completion: rnd(88,100), rating: rndF(4.3,5.0,1),
-        online: Math.random()>.4,
-        avgTime: rnd(3,30),
-      });
-    }
-  });
-  return offers;
-}
-
 const TICKER_DATA = [
   {sym:'BTC/USDT',price:'67,420',change:'+2.34%',up:true},
   {sym:'ETH/USDT',price:'3,840',change:'+1.18%',up:true},
@@ -378,999 +202,505 @@ const TICKER_DATA = [
   {sym:'TON/USDT',price:'6.45',change:'-0.82%',up:false},
   {sym:'MATIC/USDT',price:'1.12',change:'+3.21%',up:true},
   {sym:'BNB/USDT',price:'612',change:'-1.14%',up:false},
-  {sym:'XRP/USDT',price:'0.624',change:'+0.98%',up:true},
 ];
+const NAMES = ['CryptoKing','SatsStacker','EthWizard','SolSurfer','VaultMaster','DeFiDave','ChainChaser','Blocksmith'];
 
-// ───────────────────────────────────────────────────────────
-// RENDER ENGINE
-// ───────────────────────────────────────────────────────────
-const root = document.getElementById('root');
-function render(){ root.innerHTML = buildApp(); bindEvents(); }
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function rndF(a,b,d){d=d||2;return parseFloat((Math.random()*(b-a)+a).toFixed(d));}
+function aColor(n){return COLORS[n.charCodeAt(0)%COLORS.length];}
+function ini(n){return n[0].toUpperCase();}
 
-function toast(msg, type='success'){
-  state.toast = {msg, type};
-  render();
-  setTimeout(()=>{ state.toast=null; render(); }, 2600);
+function makeOffers(){
+  var o=[];
+  COINS.forEach(function(coin){
+    for(var i=0;i<6;i++){
+      var isBuy=i<3;
+      var pr=PRICES[coin];
+      var prem=rndF(-0.02,0.08);
+      var op=+(pr*(1+prem)).toFixed(coin==='USDT'?4:2);
+      var un=NAMES[rnd(0,NAMES.length-1)];
+      o.push({
+        id:coin+(isBuy?'-B':'-S')+i,
+        type:isBuy?'buy':'sell',coin:coin,price:op,
+        minAmount:rnd(20,200),maxAmount:rnd(500,5000),
+        payMethods:[PAY_METHODS[rnd(0,PAY_METHODS.length-1)]],
+        username:un,trades:rnd(12,890),completion:rnd(88,100),
+        rating:rndF(4.3,5.0,1),online:Math.random()>.4,avgTime:rnd(3,30)
+      });
+    }
+  });
+  return o;
 }
 
-// buildApp, buildNav, bindEvents, buildEscrow defined later (full versions)
+// ── STATE ──────────────────────────────────────────────────
+var S = {
+  page:'landing', authTab:'login', p2pTab:'buy', p2pCoin:'BTC',
+  user:null, offers:makeOffers(), trades:[], activeOffer:null,
+  tradeModal:false, postModal:false, ratingModal:false, notifOpen:false,
+  escrowTrade:null, toast:null, pendingRating:0,
+  loginForm:{email:'',password:''},
+  signupForm:{username:'',email:'',password:''},
+  tradeForm:{amount:'',payMethod:'Bank Transfer'},
+  postForm:{type:'sell',coin:'BTC',price:'',min:'',max:'',payMethods:[]},
+  showPw:false,
+  notifications:[
+    {id:1,type:'system',title:'Welcome to SwapGuard!',body:'P2P crypto escrow is live.',time:'Just now',read:false},
+    {id:2,type:'trade',title:'Trade Chat available',body:'Chat with counterparty inside each trade.',time:'2m ago',read:false}
+  ]
+};
+
+// ── API ────────────────────────────────────────────────────
+var API_BASE = 'https://eaf869db-8776-4f6d-945f-03c022657bae-00-1zpx4ftbbugfh.spock.replit.dev';
+
+// ── RENDER ─────────────────────────────────────────────────
+var root = document.getElementById('root');
+function render(){
+  try{ root.innerHTML = buildApp(); bindEvents(); }
+  catch(e){ root.innerHTML='<div style="color:#00e5a0;padding:20px;font-family:monospace;background:#0a0b0f;height:100vh"><h2>JS Error</h2><pre>'+e.message+'</pre><pre>'+e.stack+'</pre></div>'; }
+}
+
+function toast(msg,type){
+  type=type||'success';
+  S.toast={msg:msg,type:type};
+  render();
+  setTimeout(function(){S.toast=null;render();},2600);
+}
+
+// ── BUILD APP ──────────────────────────────────────────────
+function buildApp(){
+  var showNav = S.user && S.page!=='landing' && S.page!=='auth';
+  var unread = S.notifications.filter(function(n){return !n.read;}).length;
+  return (S.toast?'<div class="toast toast-'+S.toast.type+'">'+S.toast.msg+'</div>':'')
+    +(S.tradeModal?buildTradeModal():'')
+    +(S.postModal?buildPostModal():'')
+    +(S.ratingModal?buildRatingModal():'')
+    +(S.notifOpen?buildNotifPanel():'')
+    +buildPage()
+    +(showNav?buildNav(unread):'');
+}
+
+function buildNav(unread){
+  var tabs=[{id:'p2p',label:'P2P'},{id:'trades',label:'Trades'},{id:'profile',label:'Profile'}];
+  return '<nav class="bottom-nav">'+tabs.map(function(t){
+    var icon=t.id==='p2p'?iconP2P():t.id==='trades'?iconTrades():iconProfile();
+    var badge=t.id==='trades'&&unread>0?'<span style="position:absolute;top:-4px;right:-6px;background:var(--danger);color:#fff;border-radius:50%;width:14px;height:14px;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:800">'+unread+'</span>':'';
+    return '<button class="nav-btn'+(S.page===t.id?' active':'')+'" data-nav="'+t.id+'"><div style="position:relative;display:inline-flex">'+icon+badge+'</div><span>'+t.label+'</span></button>';
+  }).join('')+'</nav>';
+}
 
 function buildPage(){
-  switch(state.page){
-    case 'landing': return buildLanding();
-    case 'auth':    return buildAuth();
-    case 'p2p':     return buildP2P();
-    case 'escrow':  return buildEscrow();
-    case 'trades':  return buildTrades();
-    case 'profile': return buildProfile();
-    default: return buildLanding();
-  }
+  if(S.page==='landing') return buildLanding();
+  if(S.page==='auth')    return buildAuth();
+  if(S.page==='p2p')     return buildP2P();
+  if(S.page==='escrow')  return buildEscrow();
+  if(S.page==='trades')  return buildTrades();
+  if(S.page==='profile') return buildProfile();
+  return buildLanding();
 }
 
-// ───────────────────────────────────────────────────────────
-// LANDING PAGE
-// ───────────────────────────────────────────────────────────
+// ── ICONS ──────────────────────────────────────────────────
+function iconP2P(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M14 4l-4 16"/></svg>';}
+function iconTrades(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>';}
+function iconProfile(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>';}
+function iconTG(){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.68 7.92c-.12.56-.48.7-.96.44l-2.64-1.96-1.28 1.24c-.14.14-.26.26-.52.26l.18-2.6 4.72-4.26c.2-.18-.04-.28-.32-.1L7.8 15.12l-2.56-.8c-.56-.18-.58-.56.12-.82l10-3.86c.46-.18.88.1.72.8z"/></svg>';}
+
+// ── TICKER ─────────────────────────────────────────────────
+function buildTicker(){
+  var items=TICKER_DATA.concat(TICKER_DATA);
+  return '<div class="ticker-wrap"><div class="ticker-track">'+items.map(function(t){
+    return '<div class="ticker-item"><span style="color:var(--text2)">'+t.sym+'</span><span style="color:var(--text)">'+t.price+'</span><span class="'+(t.up?'ticker-up':'ticker-down')+'">'+t.change+'</span><span style="color:var(--border2)">·</span></div>';
+  }).join('')+'</div></div>';
+}
+
+// ── LANDING ────────────────────────────────────────────────
 function buildLanding(){
-  return `<div class="page">
-    ${buildTicker()}
-    <div class="landing-hero fade-up">
-      <div class="landing-logo-big">SwapGuard</div>
-      <div class="landing-tagline">Trustless P2P Crypto Escrow on Telegram</div>
-    </div>
-    <div class="stats-row fade-up-1">
-      <div class="stat-card"><div class="stat-value">$4.2M</div><div class="stat-label">Volume 24h</div></div>
-      <div class="stat-card"><div class="stat-value">12,841</div><div class="stat-label">Trades Done</div></div>
-      <div class="stat-card"><div class="stat-value">99.2%</div><div class="stat-label">Success Rate</div></div>
-    </div>
-    <div class="section-title">Why SwapGuard?</div>
-    <div class="feature-grid fade-up-2">
-      <div class="feature-card"><div class="feature-icon">🔐</div><div class="feature-title">Smart Escrow</div><div class="feature-desc">Funds locked until both parties confirm delivery</div></div>
-      <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Instant Trades</div><div class="feature-desc">Avg. 8 min settlement, 24/7 availability</div></div>
-      <div class="feature-card"><div class="feature-icon">🛡️</div><div class="feature-title">Dispute System</div><div class="feature-desc">Human arbitration on contested trades</div></div>
-      <div class="feature-card"><div class="feature-icon">🤖</div><div class="feature-title">Telegram Native</div><div class="feature-desc">Trade directly inside your chat app</div></div>
-    </div>
-    <div class="section-title">How It Works</div>
-    <div class="how-steps card fade-up-3">
-      ${[
-        ['Find an Offer','Browse buy/sell listings from verified traders worldwide.'],
-        ['Lock in Escrow','Seller\'s crypto gets held by SwapGuard escrow contract.'],
-        ['Send Payment','Buyer sends fiat via agreed payment method.'],
-        ['Release Funds','Seller confirms, escrow releases crypto to buyer instantly.'],
-      ].map(([t,d],i)=>`<div class="step">
-        <div class="step-num">${i+1}</div>
-        <div><div class="step-title">${t}</div><div class="step-desc">${d}</div></div>
-      </div>`).join('')}
-    </div>
-    <div class="cta-block fade-up-4">
-      <button class="btn btn-primary" id="cta-start">Start Trading →</button>
-      <button class="btn btn-ghost" id="cta-browse">Browse Offers</button>
-    </div>
-  </div>`;
+  return '<div class="page">'+buildTicker()
+    +'<div class="landing-hero fade-up"><div class="landing-logo-big">SwapGuard</div><div class="landing-tagline">Trustless P2P Crypto Escrow on Telegram</div></div>'
+    +'<div class="stats-row fade-up-1"><div class="stat-card"><div class="stat-value">$4.2M</div><div class="stat-label">Volume 24h</div></div><div class="stat-card"><div class="stat-value">12,841</div><div class="stat-label">Trades Done</div></div><div class="stat-card"><div class="stat-value">99.2%</div><div class="stat-label">Success Rate</div></div></div>'
+    +'<div class="section-title">Why SwapGuard?</div>'
+    +'<div class="feature-grid fade-up-2"><div class="feature-card"><div class="feature-icon">🔐</div><div class="feature-title">Smart Escrow</div><div class="feature-desc">Funds locked until both parties confirm</div></div><div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Instant Trades</div><div class="feature-desc">Avg. 8 min settlement, 24/7</div></div><div class="feature-card"><div class="feature-icon">🛡️</div><div class="feature-title">Dispute System</div><div class="feature-desc">Human arbitration on contested trades</div></div><div class="feature-card"><div class="feature-icon">🤖</div><div class="feature-title">Telegram Native</div><div class="feature-desc">Trade inside your chat app</div></div></div>'
+    +'<div class="section-title">How It Works</div>'
+    +'<div class="how-steps card fade-up-3">'
+    +[['Find an Offer','Browse listings from verified traders.'],['Lock in Escrow',"Seller's crypto held by SwapGuard."],['Send Payment','Buyer sends fiat via agreed method.'],['Release Funds','Seller confirms, crypto released instantly.']].map(function(s,i){
+      return '<div class="step"><div class="step-num">'+(i+1)+'</div><div><div class="step-title">'+s[0]+'</div><div class="step-desc">'+s[1]+'</div></div></div>';
+    }).join('')+'</div>'
+    +'<div class="cta-block fade-up-4"><button class="btn btn-primary" id="cta-start">Start Trading →</button><button class="btn btn-ghost" id="cta-browse">Browse Offers</button></div>'
+    +'</div>';
 }
 
-// ───────────────────────────────────────────────────────────
-// AUTH PAGE
-// ───────────────────────────────────────────────────────────
-function buildAuth(){
-  const isLogin = state.authTab === 'login';
-  const f = isLogin ? state.loginForm : state.signupForm;
-  const pwStrength = calcStrength(f.password||'');
-  return `<div class="page">
-    <div class="auth-wrap">
-      <div class="auth-title fade-up">${isLogin ? 'Welcome back 👋' : 'Create account'}</div>
-      <div class="auth-subtitle fade-up-1">${isLogin ? 'Sign in to access your P2P trading account.' : 'Set up your SwapGuard account to start trading.'}</div>
-      <div class="tab-row fade-up-1">
-        <button class="tab-btn${isLogin?' active':''}" id="tab-login">Sign In</button>
-        <button class="tab-btn${!isLogin?' active':''}" id="tab-signup">Sign Up</button>
-      </div>
-      ${tgUser ? `<button class="tg-auth-btn fade-up-1" id="tg-auth">
-        ${iconTelegram()} Continue as @${tgUser.username||tgUser.first_name}
-      </button>
-      <div class="divider fade-up-2"><div class="divider-line"></div><div class="divider-text">or with email</div></div>` : ''}
-      <div class="fade-up-2">
-        ${!isLogin ? `<div class="input-group"><label class="input-label">Username</label>
-          <input class="input" type="text" id="f-username" placeholder="@satoshi_nakamoto" value="${state.signupForm.username}"/></div>` : ''}
-        <div class="input-group"><label class="input-label">Email Address</label>
-          <input class="input" type="email" id="f-email" placeholder="you@example.com" value="${f.email}"/></div>
-        <div class="input-group"><label class="input-label">Password</label>
-          <div class="input-with-icon">
-            <input class="input" type="${state.showPassword?'text':'password'}" id="f-password" placeholder="••••••••" value="${f.password}"/>
-            <button class="input-eye" id="toggle-pw">${state.showPassword ? '🙈' : '👁️'}</button>
-          </div>
-          ${!isLogin ? `<div class="strength-bar"><div class="strength-fill" style="width:${pwStrength.pct}%;background:${pwStrength.color}"></div></div>` : ''}
-        </div>
-        ${isLogin ? `<div style="text-align:right;margin:-8px 0 14px"><span style="font-size:12px;color:var(--accent);cursor:pointer">Forgot password?</span></div>` : ''}
-        <button class="btn btn-primary" id="auth-submit">${isLogin ? 'Sign In' : 'Create Account'}</button>
-        <div class="terms-text">By continuing you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></div>
-      </div>
-    </div>
-  </div>`;
-}
-
+// ── AUTH ───────────────────────────────────────────────────
 function calcStrength(pw){
-  let s=0;
-  if(pw.length>=8)s++;
-  if(/[A-Z]/.test(pw))s++;
-  if(/[0-9]/.test(pw))s++;
-  if(/[^A-Za-z0-9]/.test(pw))s++;
-  const colors = ['#ff4560','#ffb800','#0070f3','#00e5a0'];
-  const pcts = [20,50,75,100];
-  return { pct: pw.length?pcts[s-1]||15:0, color: colors[s-1]||'#ff4560' };
+  var s=0;
+  if(pw.length>=8)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;
+  var c=['#ff4560','#ffb800','#0070f3','#00e5a0'];var p=[20,50,75,100];
+  return{pct:pw.length?p[s-1]||15:0,color:c[s-1]||'#ff4560'};
+}
+function buildAuth(){
+  var isL=S.authTab==='login';
+  var f=isL?S.loginForm:S.signupForm;
+  var str=calcStrength(f.password||'');
+  return '<div class="page"><div class="auth-wrap">'
+    +'<div class="auth-title fade-up">'+(isL?'Welcome back 👋':'Create account')+'</div>'
+    +'<div class="auth-subtitle fade-up-1">'+(isL?'Sign in to your SwapGuard account.':'Set up your account to start trading.')+'</div>'
+    +'<div class="tab-row fade-up-1"><button class="tab-btn'+(isL?' active':'')+'" id="tab-login">Sign In</button><button class="tab-btn'+(!isL?' active':'')+'" id="tab-signup">Sign Up</button></div>'
+    +(tgUser?'<button class="tg-auth-btn fade-up-1" id="tg-auth">'+iconTG()+' Continue as @'+(tgUser.username||tgUser.first_name)+'</button><div class="divider fade-up-2"><div class="divider-line"></div><div class="divider-text">or with email</div></div>':'')
+    +'<div class="fade-up-2">'
+    +(!isL?'<div class="input-group"><label class="input-label">Username</label><input class="input" type="text" id="f-username" placeholder="@satoshi" value="'+S.signupForm.username+'"/></div>':'')
+    +'<div class="input-group"><label class="input-label">Email</label><input class="input" type="email" id="f-email" placeholder="you@example.com" value="'+f.email+'"/></div>'
+    +'<div class="input-group"><label class="input-label">Password</label><div class="input-with-icon"><input class="input" type="'+(S.showPw?'text':'password')+'" id="f-password" placeholder="••••••••" value="'+f.password+'"/><button class="input-eye" id="toggle-pw">'+(S.showPw?'🙈':'👁️')+'</button></div>'
+    +(!isL?'<div class="strength-bar"><div class="strength-fill" style="width:'+str.pct+'%;background:'+str.color+'"></div></div>':'')+'</div>'
+    +(isL?'<div style="text-align:right;margin:-8px 0 14px"><span style="font-size:12px;color:var(--accent);cursor:pointer">Forgot password?</span></div>':'')
+    +'<button class="btn btn-primary" id="auth-submit">'+(isL?'Sign In':'Create Account')+'</button>'
+    +'<div class="terms-text">By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>'
+    +'</div></div></div>';
 }
 
-// ───────────────────────────────────────────────────────────
-// P2P PAGE
-// ───────────────────────────────────────────────────────────
+// ── P2P ────────────────────────────────────────────────────
 function buildP2P(){
-  const offers = state.offers.filter(o =>
-    o.type===state.p2pTab && o.coin===state.p2pCoin
-  );
-  return `<div>
-    <div class="topbar">
-      <div class="topbar-logo">Swap<span>Guard</span></div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <span class="badge badge-green"><span class="online-dot"></span> Live</span>
-        <button class="btn btn-sm btn-ghost" id="create-offer" style="padding:7px 12px;font-size:12px">+ Post</button>
-      </div>
-    </div>
-    ${buildTicker()}
-    <div style="padding:10px 16px 0">
-      <div class="tab-row">
-        <button class="tab-btn${state.p2pTab==='buy'?' active':''}" id="p2p-tab-buy">Buy Crypto</button>
-        <button class="tab-btn${state.p2pTab==='sell'?' active':''}" id="p2p-tab-sell">Sell Crypto</button>
-      </div>
-    </div>
-    <div class="filter-row">
-      ${COINS.map(c=>`<div class="filter-chip${state.p2pCoin===c?' active':''}" data-coin="${c}">${c}</div>`).join('')}
-    </div>
-    <div class="page" style="padding-bottom:80px">
-      ${offers.length===0?`<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No offers yet.<br/>Be the first to post!</div></div>`:
-      offers.map(o=>buildOfferCard(o)).join('')}
-    </div>
-  </div>`;
+  var offers=S.offers.filter(function(o){return o.type===S.p2pTab&&o.coin===S.p2pCoin;});
+  return '<div>'
+    +'<div class="topbar"><div class="topbar-logo">Swap<span>Guard</span></div><div style="display:flex;gap:6px;align-items:center"><span class="badge badge-green"><span class="online-dot"></span> Live</span><button class="btn btn-sm btn-ghost" id="create-offer" style="padding:7px 12px;font-size:12px">+ Post</button></div></div>'
+    +buildTicker()
+    +'<div style="padding:10px 16px 0"><div class="tab-row"><button class="tab-btn'+(S.p2pTab==='buy'?' active':'')+'" id="p2p-buy">Buy Crypto</button><button class="tab-btn'+(S.p2pTab==='sell'?' active':'')+'" id="p2p-sell">Sell Crypto</button></div></div>'
+    +'<div class="filter-row">'+COINS.map(function(c){return '<div class="filter-chip'+(S.p2pCoin===c?' active':'')+'" data-coin="'+c+'">'+c+'</div>';}).join('')+'</div>'
+    +'<div class="page" style="padding-bottom:80px">'
+    +(offers.length===0?'<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No offers yet.<br/>Be the first to post!</div></div>':offers.map(buildOfferCard).join(''))
+    +'</div></div>';
 }
 
 function buildOfferCard(o){
-  const isBuy = o.type==='buy';
-  const priceStr = o.coin==='USDT' ? `$${o.price.toFixed(4)}` : `$${o.price.toLocaleString()}`;
-  const stars = '★'.repeat(Math.round(o.rating))+'☆'.repeat(5-Math.round(o.rating));
-  return `<div class="offer-card ${isBuy?'buy-card':'sell-card'}" data-offer="${o.id}">
-    <div class="offer-top">
-      <div class="offer-user">
-        <div class="user-avatar" style="background:${avatarColor(o.username)}22;color:${avatarColor(o.username)}">${initial(o.username)}</div>
-        <div>
-          <div class="user-name">${o.username} ${o.online?'<span class="online-dot"></span>':''}</div>
-          <div class="user-meta">${o.trades} trades · ${o.completion}% · <span style="color:var(--warn)">${stars}</span></div>
-        </div>
-      </div>
-      <div>
-        <div class="offer-price" style="color:${isBuy?'var(--accent)':'var(--danger)'}">${priceStr}</div>
-        <div class="offer-currency">per ${o.coin}</div>
-      </div>
-    </div>
-    <div class="offer-details">
-      <div class="offer-detail"><div class="detail-label">Limit</div><div class="detail-value">$${o.minAmount}–$${o.maxAmount}</div></div>
-      <div class="offer-detail"><div class="detail-label">Pay Via</div><div class="detail-value" style="font-size:11px;font-family:var(--sans)">${o.payMethods[0]}</div></div>
-      <div class="offer-detail"><div class="detail-label">Avg Time</div><div class="detail-value">${o.avgTime}m</div></div>
-    </div>
-    <div class="offer-footer">
-      <div style="display:flex;gap:6px;flex-wrap:wrap">${o.payMethods.map(p=>`<span class="badge badge-gray">${p}</span>`).join('')}</div>
-      <button class="btn btn-sm ${isBuy?'btn-primary':'btn-danger'}" style="${isBuy?'':'background:rgba(255,69,96,.15);color:var(--danger);border:1px solid rgba(255,69,96,.3)'}" data-trade="${o.id}">${isBuy?'Buy':'Sell'} ${o.coin}</button>
-    </div>
-  </div>`;
+  var isBuy=o.type==='buy';
+  var pr=o.coin==='USDT'?'$'+o.price.toFixed(4):'$'+o.price.toLocaleString();
+  var stars='★'.repeat(Math.round(o.rating))+'☆'.repeat(5-Math.round(o.rating));
+  return '<div class="offer-card" data-offer="'+o.id+'">'
+    +'<div class="offer-top"><div class="offer-user"><div class="user-avatar" style="background:'+aColor(o.username)+'22;color:'+aColor(o.username)+'">'+ini(o.username)+'</div>'
+    +'<div><div class="user-name">'+o.username+(o.online?' <span class="online-dot"></span>':'')+'</div><div class="user-meta">'+o.trades+' trades · '+o.completion+'% · <span style="color:var(--warn)">'+stars+'</span></div></div></div>'
+    +'<div><div class="offer-price" style="color:'+(isBuy?'var(--accent)':'var(--danger)')+'">'+pr+'</div><div class="offer-currency">per '+o.coin+'</div></div></div>'
+    +'<div class="offer-details"><div class="offer-detail"><div class="detail-label">Limit</div><div class="detail-value">$'+o.minAmount+'–$'+o.maxAmount+'</div></div>'
+    +'<div class="offer-detail"><div class="detail-label">Pay Via</div><div class="detail-value" style="font-size:11px;font-family:var(--sans)">'+o.payMethods[0]+'</div></div>'
+    +'<div class="offer-detail"><div class="detail-label">Avg Time</div><div class="detail-value">'+o.avgTime+'m</div></div></div>'
+    +'<div class="offer-footer"><div>'+o.payMethods.map(function(p){return '<span class="badge badge-gray">'+p+'</span>';}).join(' ')+'</div>'
+    +'<button class="btn btn-sm '+(isBuy?'btn-primary':'btn-danger')+'" data-trade="'+o.id+'">'+(isBuy?'Buy':'Sell')+' '+o.coin+'</button></div></div>';
 }
 
-// ───────────────────────────────────────────────────────────
-// TRADE MODAL
-// ───────────────────────────────────────────────────────────
+// ── TRADE MODAL ────────────────────────────────────────────
 function buildTradeModal(){
-  const o = state.activeOffer;
-  if(!o) return '';
-  const isBuy = o.type==='buy';
-  const amt = parseFloat(state.tradeForm.amount)||0;
-  const cryptoAmt = amt > 0 ? (amt/o.price).toFixed(8) : '0.00000000';
-  const fee = amt>0 ? (amt*0.005).toFixed(2) : '0.00';
-  const total = amt>0 ? (amt+parseFloat(fee)).toFixed(2) : '0.00';
-  return `<div class="modal-overlay" id="modal-overlay">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-title">${isBuy?'Buy':'Sell'} ${o.coin} — @${o.username}</div>
-      <div class="modal-body">
-        <div class="escrow-info">
-          <div class="escrow-info-title">🔐 Escrow Protected</div>
-          <div class="escrow-info-text">Crypto will be locked in SwapGuard escrow until you confirm receipt of payment. Disputes are resolved by our team within 24h.</div>
-        </div>
-        <div class="trade-summary">
-          ${[
-            ['Trader', `@${o.username}`],
-            ['Trade Type', isBuy?'Buy Crypto':'Sell Crypto'],
-            ['Rate', `$${o.price.toLocaleString()} / ${o.coin}`],
-            ['Limit', `$${o.minAmount} – $${o.maxAmount}`],
-            ['Payment', o.payMethods[0]],
-          ].map(([k,v])=>`<div class="trade-row"><span class="trade-key">${k}</span><span class="trade-val">${v}</span></div>`).join('')}
-        </div>
-        <div class="input-group">
-          <label class="input-label">You Pay (USD)</label>
-          <input class="input" type="number" id="trade-amount" placeholder="Enter amount" value="${state.tradeForm.amount}" min="${o.minAmount}" max="${o.maxAmount}"/>
-          <div style="font-size:11px;color:var(--text3);margin-top:5px">Min: $${o.minAmount} · Max: $${o.maxAmount}</div>
-        </div>
-        <div class="input-group">
-          <label class="input-label">Payment Method</label>
-          <select class="input" id="trade-pay">
-            ${PAY_METHODS.map(p=>`<option${state.tradeForm.payMethod===p?' selected':''}>${p}</option>`).join('')}
-          </select>
-        </div>
-        ${amt > 0 ? `<div class="amount-calc">
-          <div class="amount-calc-row"><span class="calc-label">You Pay</span><span class="calc-value">$${amt.toFixed(2)}</span></div>
-          <div class="amount-calc-row"><span class="calc-label">Escrow Fee (0.5%)</span><span class="calc-value">$${fee}</span></div>
-          <div class="amount-calc-row"><span class="calc-label">You Receive</span><span class="calc-total">${cryptoAmt} ${o.coin}</span></div>
-        </div>` : ''}
-        ${amt > 0 && (amt < o.minAmount || amt > o.maxAmount) ? `<div class="warning-box">⚠️ Amount must be between $${o.minAmount} and $${o.maxAmount}</div>` : ''}
-        <button class="btn btn-primary" id="confirm-trade" ${!amt||amt<o.minAmount||amt>o.maxAmount?'disabled':''}>
-          🔐 Open Escrow Trade
-        </button>
-        <button class="btn btn-secondary" style="margin-top:10px" id="close-modal">Cancel</button>
-      </div>
-    </div>
-  </div>`;
+  var o=S.activeOffer; if(!o) return '';
+  var isBuy=o.type==='buy';
+  var amt=parseFloat(S.tradeForm.amount)||0;
+  var cAmt=amt>0?(amt/o.price).toFixed(8):'0.00000000';
+  var fee=amt>0?(amt*0.005).toFixed(2):'0.00';
+  var valid=amt>=o.minAmount&&amt<=o.maxAmount;
+  return '<div class="modal-overlay" id="modal-overlay">'
+    +'<div class="modal-sheet"><div class="modal-handle"></div>'
+    +'<div class="modal-title">'+(isBuy?'Buy':'Sell')+' '+o.coin+' — @'+o.username+'</div>'
+    +'<div class="modal-body">'
+    +'<div class="escrow-info"><div class="escrow-info-title">🔐 Escrow Protected</div><div class="escrow-info-text">Crypto locked in SwapGuard escrow until payment confirmed. Disputes resolved within 24h.</div></div>'
+    +'<div class="trade-summary">'
+    +[['Trader','@'+o.username],['Type',isBuy?'Buy Crypto':'Sell Crypto'],['Rate','$'+o.price.toLocaleString()+' / '+o.coin],['Limit','$'+o.minAmount+' – $'+o.maxAmount],['Payment',o.payMethods[0]]].map(function(r){
+      return '<div class="trade-row"><span class="trade-key">'+r[0]+'</span><span class="trade-val">'+r[1]+'</span></div>';
+    }).join('')+'</div>'
+    +'<div class="input-group"><label class="input-label">You Pay (USD)</label><input class="input" type="number" id="trade-amount" placeholder="Enter amount" value="'+S.tradeForm.amount+'"/><div style="font-size:11px;color:var(--text3);margin-top:5px">Min: $'+o.minAmount+' · Max: $'+o.maxAmount+'</div></div>'
+    +'<div class="input-group"><label class="input-label">Payment Method</label><select class="input" id="trade-pay">'+PAY_METHODS.map(function(p){return '<option'+(S.tradeForm.payMethod===p?' selected':'')+'>'+p+'</option>';}).join('')+'</select></div>'
+    +(amt>0?'<div class="amount-calc"><div class="amount-calc-row"><span class="calc-label">You Pay</span><span class="calc-value">$'+amt.toFixed(2)+'</span></div><div class="amount-calc-row"><span class="calc-label">Fee (0.5%)</span><span class="calc-value">$'+fee+'</span></div><div class="amount-calc-row"><span class="calc-label">You Receive</span><span class="calc-total">'+cAmt+' '+o.coin+'</span></div></div>':'')
+    +(!valid&&amt>0?'<div class="warning-box">⚠️ Amount must be $'+o.minAmount+' – $'+o.maxAmount+'</div>':'')
+    +'<button class="btn btn-primary" id="confirm-trade"'+((!amt||!valid)?' disabled':'')+'>🔐 Open Escrow Trade</button>'
+    +'<button class="btn btn-secondary" style="margin-top:10px" id="close-modal">Cancel</button>'
+    +'</div></div></div>';
 }
 
-// buildEscrow defined below (full version with chat)
+// ── POST OFFER MODAL ───────────────────────────────────────
+function buildPostModal(){
+  var f=S.postForm;
+  var mp=PRICES[f.coin]||0;
+  return '<div class="modal-overlay"><div class="modal-sheet"><div class="modal-handle"></div>'
+    +'<div class="modal-title">📢 Post an Offer</div><div class="modal-body">'
+    +'<div class="input-row"><div class="input-group"><label class="input-label">I want to</label><select class="input" id="po-type"><option value="sell"'+(f.type==='sell'?' selected':'')+'>Sell Crypto</option><option value="buy"'+(f.type==='buy'?' selected':'')+'>Buy Crypto</option></select></div>'
+    +'<div class="input-group"><label class="input-label">Coin</label><select class="input" id="po-coin">'+COINS.map(function(c){return '<option'+(f.coin===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div></div>'
+    +'<div class="input-group"><label class="input-label">Rate (USD per '+f.coin+')</label><input class="input" type="number" id="po-price" placeholder="'+mp+'" value="'+f.price+'"/><div style="font-size:11px;color:var(--text3);margin-top:5px">Market: $'+mp.toLocaleString()+'</div></div>'
+    +'<div class="input-row"><div class="input-group"><label class="input-label">Min USD</label><input class="input" type="number" id="po-min" placeholder="50" value="'+f.min+'"/></div><div class="input-group"><label class="input-label">Max USD</label><input class="input" type="number" id="po-max" placeholder="5000" value="'+f.max+'"/></div></div>'
+    +'<div class="input-group"><label class="input-label">Payment Methods</label><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">'+PAY_METHODS.map(function(p){var sel=f.payMethods.indexOf(p)>=0;return '<div class="filter-chip'+(sel?' active':'')+' po-pay" data-pay="'+p+'">'+p+'</div>';}).join('')+'</div></div>'
+    +'<button class="btn btn-primary" id="submit-post">📢 Post Offer</button>'
+    +'<button class="btn btn-secondary" style="margin-top:10px" id="close-post">Cancel</button>'
+    +'</div></div></div>';
+}
 
-function buildEscrowActions(t, isBuyer){
-  if(t.status === 'created'){
-    return `<div class="card">
-      <div class="card-title" style="margin-bottom:12px">Next Step</div>
-      <div class="warning-box">⏳ Waiting for seller to lock crypto in escrow. You'll be notified once funds are locked.</div>
-      ${isBuyer?'':
-      `<button class="btn btn-primary" id="lock-escrow">🔐 Lock ${t.cryptoAmt} ${t.coin} in Escrow</button>`}
-    </div>`;
-  }
-  if(t.status === 'locked'){
-    return `<div class="card">
-      <div class="card-title" style="margin-bottom:12px">${isBuyer?'Send Payment':'Awaiting Payment'}</div>
-      ${isBuyer?`<div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;border:1px solid var(--border)">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">SEND EXACTLY</div>
-        <div style="font-size:22px;font-weight:800;font-family:var(--mono);color:var(--accent)">$${t.fiatAmt}</div>
-        <div style="font-size:13px;color:var(--text2);margin-top:4px">via ${t.payMethod} to @${t.counterparty}</div>
-      </div>
-      <button class="btn btn-primary" id="confirm-paid">✅ I've Sent the Payment</button>`
-      :`<div class="warning-box">⏳ Buyer needs to send $${t.fiatAmt} via ${t.payMethod}. Release escrow only after confirming receipt.</div>`}
-    </div>`;
-  }
-  if(t.status === 'paid'){
-    return `<div class="card">
-      <div class="card-title" style="margin-bottom:12px">${isBuyer?'Payment Sent!':'Confirm Payment'}</div>
-      ${isBuyer?`<div class="warning-box" style="background:rgba(0,229,160,.07);border-color:rgba(0,229,160,.2);color:var(--accent)">✅ Payment marked as sent. Waiting for seller to release escrow.</div>`
-      :`<div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Buyer claims to have sent $${t.fiatAmt} via ${t.payMethod}. Verify your account then release funds.</div>
-      <button class="btn btn-primary" id="release-escrow">🚀 Release Escrow Funds</button>`}
-    </div>`;
-  }
-  if(t.status === 'released'){
-    return `<div class="card" style="border-color:rgba(0,229,160,.3)">
-      <div style="text-align:center;padding:12px 0">
-        <div style="font-size:40px;margin-bottom:10px">🎉</div>
-        <div style="font-size:18px;font-weight:800;color:var(--accent);margin-bottom:6px">Trade Complete!</div>
-        <div style="font-size:13px;color:var(--text2)">${isBuyer?`${t.cryptoAmt} ${t.coin} sent to your wallet`:`$${t.fiatAmt} received`}</div>
-      </div>
-    </div>`;
-  }
-  if(t.status === 'disputed'){
-    return `<div class="card" style="border-color:rgba(255,69,96,.3)">
-      <div class="warning-box" style="margin-bottom:0">⚠️ Dispute opened. Our team will review this trade within 24 hours. Both parties will be contacted via Telegram.</div>
-    </div>`;
-  }
+// ── ESCROW PAGE ────────────────────────────────────────────
+function buildEscrow(){
+  var t=S.escrowTrade;
+  if(!t) return '<div class="page"><div class="empty-state"><div class="empty-icon">🔐</div><div class="empty-text">No active trade</div></div></div>';
+  var steps=['Created','Locked','Paid','Released'];
+  var si=['created','locked','paid','released'].indexOf(t.status);
+  var isBuyer=t.role==='buyer';
+  return '<div>'
+    +'<div class="topbar"><button style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:22px;padding:0 8px 0 0" id="back-p2p">←</button><div class="topbar-logo">Swap<span>Guard</span></div><span class="badge '+(t.status==='released'?'badge-green':t.status==='disputed'?'badge-red':'badge-blue')+'">'+t.status.toUpperCase()+'</span></div>'
+    +'<div class="page">'
+    +'<div style="padding:16px 16px 0"><div style="font-size:20px;font-weight:800;margin-bottom:4px">'+t.coin+' Escrow Trade</div><div style="font-size:12px;color:var(--text2);font-family:var(--mono)">ID: '+t.id+'</div></div>'
+    +'<div style="padding:20px 0"><div class="escrow-progress">'+steps.map(function(s,i){
+      return (i>0?'<div class="escrow-line'+(i<=si?' done':'')+'"></div>':'')
+        +'<div class="escrow-step"><div class="escrow-step-dot'+(i<si?' done':i===si?' active':'')+'">'+( i<si?'✓':i+1)+'</div><div class="escrow-step-label'+(i===si?' active':'')+'">'+s+'</div></div>';
+    }).join('')+'</div></div>'
+    +'<div class="card"><div class="card-header"><div class="card-title">Trade Details</div></div>'
+    +[['Trade ID',t.id],['Coin',t.coin],['Amount',t.cryptoAmt+' '+t.coin],['You Pay','$'+t.fiatAmt],['Rate','$'+t.rate.toLocaleString()],['Payment',t.payMethod],[isBuyer?'Seller':'Buyer','@'+t.counterparty],['Fee','$'+t.fee]].map(function(r){
+      return '<div class="info-row"><span class="info-label">'+r[0]+'</span><span style="font-family:var(--mono);font-size:13px;font-weight:700">'+r[1]+'</span></div>';
+    }).join('')+'</div>'
+    +buildEscrowActions(t,isBuyer)
+    +buildTradeChat(t)
+    +(t.status==='released'&&!t.rated?'<div style="padding:0 16px 8px"><button class="btn btn-secondary" id="open-rating">⭐ Rate @'+t.counterparty+'</button></div>':'')
+    +'<div class="card"><div class="card-header"><div class="card-title">🔐 Escrow Security</div></div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+t.cryptoAmt+' '+t.coin+' is locked in escrow. Released only when seller confirms payment.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><span class="security-chip">🔒 Multi-sig</span><span class="security-chip">⏱️ 24h Dispute</span><span class="security-chip">🤝 Arbitration</span></div></div>'
+    +(t.status!=='released'&&t.status!=='disputed'?'<div style="padding:0 16px 16px"><button class="btn btn-danger" id="open-dispute">⚠️ Open Dispute</button></div>':'')
+    +'</div></div>';
+}
+
+function buildEscrowActions(t,isBuyer){
+  if(t.status==='created') return '<div class="card"><div class="card-title" style="margin-bottom:12px">Next Step</div><div class="warning-box">⏳ Waiting for seller to lock crypto in escrow.</div>'+(isBuyer?'':'<button class="btn btn-primary" id="lock-escrow">🔐 Lock '+t.cryptoAmt+' '+t.coin+' in Escrow</button>')+'</div>';
+  if(t.status==='locked') return '<div class="card"><div class="card-title" style="margin-bottom:12px">'+(isBuyer?'Send Payment':'Awaiting Payment')+'</div>'+(isBuyer?'<div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--text3);margin-bottom:4px">SEND EXACTLY</div><div style="font-size:22px;font-weight:800;font-family:var(--mono);color:var(--accent)">$'+t.fiatAmt+'</div><div style="font-size:13px;color:var(--text2);margin-top:4px">via '+t.payMethod+' to @'+t.counterparty+'</div></div><button class="btn btn-primary" id="confirm-paid">✅ I\'ve Sent the Payment</button>':'<div class="warning-box">⏳ Waiting for buyer to send $'+t.fiatAmt+' via '+t.payMethod+'</div>')+'</div>';
+  if(t.status==='paid') return '<div class="card"><div class="card-title" style="margin-bottom:12px">'+(isBuyer?'Payment Sent!':'Confirm Payment')+'</div>'+(isBuyer?'<div class="warning-box" style="background:rgba(0,229,160,.07);border-color:rgba(0,229,160,.2);color:var(--accent)">✅ Payment sent. Waiting for seller to release.</div>':'<div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Buyer claims to have sent $'+t.fiatAmt+'. Verify receipt then release.</div><button class="btn btn-primary" id="release-escrow">🚀 Release Escrow Funds</button>')+'</div>';
+  if(t.status==='released') return '<div class="card" style="border-color:rgba(0,229,160,.3)"><div style="text-align:center;padding:12px 0"><div style="font-size:40px;margin-bottom:10px">🎉</div><div style="font-size:18px;font-weight:800;color:var(--accent);margin-bottom:6px">Trade Complete!</div><div style="font-size:13px;color:var(--text2)">'+(isBuyer?t.cryptoAmt+' '+t.coin+' sent to your wallet':'$'+t.fiatAmt+' received')+'</div></div></div>';
+  if(t.status==='disputed') return '<div class="card" style="border-color:rgba(255,69,96,.3)"><div class="warning-box" style="margin-bottom:0">⚠️ Dispute opened. Support will contact both parties within 24h.</div></div>';
   return '';
 }
 
-// ───────────────────────────────────────────────────────────
-// MY TRADES PAGE
-// ───────────────────────────────────────────────────────────
-function buildTrades(){
-  return `<div>
-    <div class="topbar">
-      <div class="topbar-logo">My <span>Trades</span></div>
-      <span class="badge badge-gray">${state.trades.length} total</span>
-    </div>
-    <div class="page">
-      ${state.trades.length === 0 ?
-        `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No trades yet.<br/>Go to P2P to start your first trade!</div></div>
-        <div style="padding:0 16px"><button class="btn btn-primary" id="go-p2p">Browse P2P Offers</button></div>` :
-        state.trades.map(t=>buildTradeItem(t)).join('')
-      }
-    </div>
-  </div>`;
-}
-
-function buildTradeItem(t){
-  const statusColors = { created:'badge-blue',locked:'badge-orange',paid:'badge-blue',released:'badge-green',disputed:'badge-red' };
-  const icons = { BTC:'₿', ETH:'Ξ', USDT:'$', SOL:'◎', TON:'💎', MATIC:'⬡' };
-  return `<div class="trade-item" data-trade-view="${t.id}">
-    <div class="trade-icon" style="background:${avatarColor(t.coin)}22;color:${avatarColor(t.coin)}">${icons[t.coin]||'🪙'}</div>
-    <div class="trade-info">
-      <div class="trade-title">${t.type==='buy'?'Bought':'Sold'} ${t.coin} from @${t.counterparty}</div>
-      <div class="trade-date">${t.date} · <span class="badge ${statusColors[t.status]||'badge-gray'}" style="padding:1px 6px;font-size:9px">${t.status}</span></div>
-    </div>
-    <div class="trade-amount">
-      <div class="trade-crypto" style="color:${t.type==='buy'?'var(--accent)':'var(--danger)'}">
-        ${t.type==='buy'?'+':'−'}${t.cryptoAmt} ${t.coin}
-      </div>
-      <div class="trade-fiat">$${t.fiatAmt}</div>
-    </div>
-  </div>`;
-}
-
-// ───────────────────────────────────────────────────────────
-// PROFILE PAGE
-// ───────────────────────────────────────────────────────────
-function buildProfile(){
-  const u = state.user || {username:'Anonymous',email:'—',trades:0,rating:0,joinDate:'2024'};
-  return `<div>
-    <div class="topbar">
-      <div class="topbar-logo">My <span>Profile</span></div>
-      <button class="btn btn-sm btn-ghost" id="logout-btn" style="padding:7px 12px;font-size:12px">Log Out</button>
-    </div>
-    <div class="page">
-      <div class="profile-header fade-up">
-        <div class="profile-avatar-big" style="background:${avatarColor(u.username)}22;color:${avatarColor(u.username)}">${initial(u.username)}</div>
-        <div>
-          <div class="profile-name">${u.username}</div>
-          <div class="profile-handle">@${u.username.toLowerCase()}</div>
-          <div class="profile-stats">
-            <div><div class="pstat-val">${u.completedTrades||0}</div><div class="pstat-label">Trades</div></div>
-            <div><div class="pstat-val">${u.rating||'—'}</div><div class="pstat-label">Rating</div></div>
-            <div><div class="pstat-val">0%</div><div class="pstat-label">Disputes</div></div>
-          </div>
-        </div>
-      </div>
-      <div style="padding:6px 0">
-        ${[
-          {icon:'🔐',bg:'rgba(0,229,160,.1)',title:'Security Settings',sub:'2FA, password, sessions'},
-          {icon:'💳',bg:'rgba(0,112,243,.1)',title:'Payment Methods',sub:'Add bank, PayPal, cards'},
-          {icon:'📊',bg:'rgba(247,147,26,.1)',title:'Trade History',sub:`${state.trades.length} completed trades`},
-          {icon:'🛡️',bg:'rgba(168,85,247,.1)',title:'KYC Verification',sub:'Increase your trade limits'},
-          {icon:'🔔',bg:'rgba(6,182,212,.1)',title:'Notifications',sub:'Telegram alerts & email'},
-          {icon:'⚖️',bg:'rgba(255,69,96,.1)',title:'Disputes',sub:'Open/closed disputes'},
-          {icon:'📖',bg:'rgba(126,142,168,.1)',title:'Help & Support',sub:'FAQ, live chat'},
-        ].map(m=>`<div class="menu-item">
-          <div class="menu-icon" style="background:${m.bg}">${m.icon}</div>
-          <div class="menu-text"><div class="menu-title">${m.title}</div><div class="menu-sub">${m.sub}</div></div>
-          <div class="menu-arrow">›</div>
-        </div>`).join('')}
-      </div>
-      <div style="padding:16px">
-        <div style="text-align:center;font-size:11px;color:var(--text3)">SwapGuard v1.0.0 · Secured by escrow protocol</div>
-      </div>
-    </div>
-  </div>`;
-}
-
-// ───────────────────────────────────────────────────────────
-// TICKER
-// ───────────────────────────────────────────────────────────
-function buildTicker(){
-  const items = [...TICKER_DATA,...TICKER_DATA];
-  return `<div class="ticker-wrap">
-    <div class="ticker-track">
-      ${items.map(t=>`<div class="ticker-item">
-        <span style="color:var(--text2)">${t.sym}</span>
-        <span style="color:var(--text)">${t.price}</span>
-        <span class="${t.up?'ticker-up':'ticker-down'}">${t.change}</span>
-        <span style="color:var(--border2)">·</span>
-      </div>`).join('')}
-    </div>
-  </div>`;
-}
-
-// ───────────────────────────────────────────────────────────
-// ICONS (inline SVG)
-// ───────────────────────────────────────────────────────────
-function iconP2P(){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M14 4l-4 16"/></svg>`; }
-function iconTrades(){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>`; }
-function iconProfile(){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>`; }
-function iconTelegram(){ return `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.68 7.92c-.12.56-.48.7-.96.44l-2.64-1.96-1.28 1.24c-.14.14-.26.26-.52.26l.18-2.6 4.72-4.26c.2-.18-.04-.28-.32-.1L7.8 15.12l-2.56-.8c-.56-.18-.58-.56.12-.82l10-3.86c.46-.18.88.1.72.8l.56.36z"/></svg>`; }
-
-// bindEvents defined below (full version)
-
-// (old bindEvents removed)
-
-// ───────────────────────────────────────────────────────────
-// POST OFFER MODAL
-// ───────────────────────────────────────────────────────────
-function buildPostOfferModal(){
-  const f = state.postForm;
-  const suggestedPrice = PRICES[f.coin]||0;
-  return `<div class="modal-overlay" id="post-modal-overlay">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-title">📢 Post an Offer</div>
-      <div class="modal-body">
-        <div class="input-row">
-          <div class="input-group">
-            <label class="input-label">I want to</label>
-            <select class="input" id="po-type">
-              <option value="sell"${f.type==='sell'?' selected':''}>Sell Crypto</option>
-              <option value="buy"${f.type==='buy'?' selected':''}>Buy Crypto</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label class="input-label">Coin</label>
-            <select class="input" id="po-coin">
-              ${COINS.map(c=>`<option${f.coin===c?' selected':''}>${c}</option>`).join('')}
-            </select>
-          </div>
-        </div>
-        <div class="input-group">
-          <label class="input-label">My Rate (USD per ${f.coin})</label>
-          <input class="input" type="number" id="po-price" placeholder="${suggestedPrice}" value="${f.price}"/>
-          <div style="font-size:11px;color:var(--text3);margin-top:5px">Market: $${suggestedPrice.toLocaleString()} — set your premium/discount</div>
-        </div>
-        <div class="input-row">
-          <div class="input-group">
-            <label class="input-label">Min (USD)</label>
-            <input class="input" type="number" id="po-min" placeholder="50" value="${f.min}"/>
-          </div>
-          <div class="input-group">
-            <label class="input-label">Max (USD)</label>
-            <input class="input" type="number" id="po-max" placeholder="5000" value="${f.max}"/>
-          </div>
-        </div>
-        <div class="input-group">
-          <label class="input-label">Payment Methods</label>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
-            ${PAY_METHODS.map(p=>{
-              const sel=f.payMethods.includes(p);
-              return `<div class="po-pay-chip filter-chip${sel?' active':''}" data-pay="${p}">${p}</div>`;
-            }).join('')}
-          </div>
-        </div>
-        ${f.price && f.min && f.max ? `<div class="amount-calc">
-          <div class="amount-calc-row">
-            <span class="calc-label">${f.type==='sell'?'Selling':'Buying'}</span>
-            <span class="calc-value">${f.coin} @ $${parseFloat(f.price).toLocaleString()}</span>
-          </div>
-          <div class="amount-calc-row">
-            <span class="calc-label">Order Range</span>
-            <span class="calc-value">$${f.min} – $${f.max}</span>
-          </div>
-          <div class="amount-calc-row">
-            <span class="calc-label">vs Market</span>
-            <span class="calc-total" style="font-size:14px;color:${parseFloat(f.price)>=PRICES[f.coin]?'var(--accent)':'var(--danger)'}">
-              ${parseFloat(f.price)>=PRICES[f.coin]?'+':''}${(((parseFloat(f.price)-PRICES[f.coin])/PRICES[f.coin])*100).toFixed(2)}%
-            </span>
-          </div>
-        </div>` : ''}
-        <button class="btn btn-primary" id="submit-post-offer">📢 Post Offer</button>
-        <button class="btn btn-secondary" style="margin-top:10px" id="close-post-modal">Cancel</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-// ───────────────────────────────────────────────────────────
-// TRADE CHAT (inline in escrow page)
-// ───────────────────────────────────────────────────────────
 function buildTradeChat(t){
-  return `<div class="card">
-    <div class="card-header">
-      <div class="card-title">💬 Trade Chat</div>
-      <span style="font-size:11px;color:var(--text3)">End-to-end via Telegram</span>
-    </div>
-    <div id="chat-messages" style="max-height:180px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:8px">
-      ${(t.messages||[]).length===0
-        ? `<div style="text-align:center;font-size:12px;color:var(--text3);padding:16px">No messages yet. Use chat to coordinate payment details.</div>`
-        : (t.messages||[]).map(m=>buildChatBubble(m)).join('')}
-    </div>
-    <div style="display:flex;gap:8px">
-      <input class="input" id="chat-input" placeholder="Type a message…" style="flex:1;padding:10px 12px;font-size:13px"/>
-      <button class="btn btn-primary btn-sm" id="chat-send" style="padding:10px 16px;width:auto">Send</button>
-    </div>
-  </div>`;
+  var msgs=(t.messages||[]);
+  return '<div class="card"><div class="card-header"><div class="card-title">💬 Trade Chat</div></div>'
+    +'<div id="chat-msgs" style="max-height:160px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:6px">'
+    +(msgs.length===0?'<div style="text-align:center;font-size:12px;color:var(--text3);padding:12px">No messages yet</div>':msgs.map(function(m){
+      var me=m.from===(S.user?S.user.username:'');
+      return '<div style="display:flex;justify-content:'+(me?'flex-end':'flex-start')+'"><div style="max-width:80%;padding:7px 11px;border-radius:'+(me?'14px 14px 4px 14px':'14px 14px 14px 4px')+';background:'+(me?'rgba(0,229,160,.15)':'var(--surface2)')+';border:1px solid '+(me?'rgba(0,229,160,.25)':'var(--border2)')+';font-size:13px">'+(!me?'<div style="font-size:10px;color:var(--text3);margin-bottom:2px">@'+m.from+'</div>':'')+m.text+'<div style="font-size:9px;color:var(--text3);margin-top:3px;text-align:right">'+m.time+'</div></div></div>';
+    }).join(''))
+    +'</div><div style="display:flex;gap:8px"><input class="input" id="chat-input" placeholder="Type a message…" style="flex:1;padding:10px 12px;font-size:13px"/><button class="btn btn-primary btn-sm" id="chat-send" style="width:auto;padding:10px 16px">Send</button></div></div>';
 }
 
-function buildChatBubble(m){
-  const isMe = m.from === (state.user?.username||'');
-  return `<div style="display:flex;justify-content:${isMe?'flex-end':'flex-start'}">
-    <div style="max-width:80%;padding:8px 12px;border-radius:${isMe?'14px 14px 4px 14px':'14px 14px 14px 4px'};background:${isMe?'rgba(0,229,160,.15)':'var(--surface2)'};border:1px solid ${isMe?'rgba(0,229,160,.25)':'var(--border2)'};font-size:13px;line-height:1.4">
-      ${!isMe?`<div style="font-size:10px;color:var(--text3);margin-bottom:3px">@${m.from}</div>`:''}
-      ${m.text}
-      <div style="font-size:9px;color:var(--text3);margin-top:4px;text-align:right">${m.time}</div>
-    </div>
-  </div>`;
+// ── MY TRADES ──────────────────────────────────────────────
+function buildTrades(){
+  var icons={BTC:'₿',ETH:'Ξ',USDT:'$',SOL:'◎',TON:'💎',MATIC:'⬡'};
+  var sc={created:'badge-blue',locked:'badge-orange',paid:'badge-blue',released:'badge-green',disputed:'badge-red'};
+  return '<div><div class="topbar"><div class="topbar-logo">My <span>Trades</span></div><span class="badge badge-gray">'+S.trades.length+' total</span></div>'
+    +'<div class="page">'
+    +(S.trades.length===0?'<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No trades yet.<br/>Go to P2P to start!</div></div><div style="padding:0 16px"><button class="btn btn-primary" id="go-p2p">Browse Offers</button></div>':S.trades.map(function(t){
+      return '<div class="trade-item" data-trade-view="'+t.id+'"><div class="trade-icon" style="background:'+aColor(t.coin)+'22;color:'+aColor(t.coin)+'">'+(icons[t.coin]||'🪙')+'</div><div class="trade-info"><div class="trade-title">'+(t.type==='buy'?'Bought':'Sold')+' '+t.coin+' from @'+t.counterparty+'</div><div class="trade-date">'+t.date+' · <span class="badge '+(sc[t.status]||'badge-gray')+'" style="padding:1px 6px;font-size:9px">'+t.status+'</span></div></div><div class="trade-amount"><div class="trade-crypto" style="color:'+(t.type==='buy'?'var(--accent)':'var(--danger)')+'">'+( t.type==='buy'?'+':'−')+t.cryptoAmt+' '+t.coin+'</div><div class="trade-fiat">$'+t.fiatAmt+'</div></div></div>';
+    }).join(''))
+    +'</div></div>';
 }
 
-function sendChatMsg(){
-  const el = document.getElementById('chat-input');
-  if(!el||!el.value.trim()) return;
-  if(!state.escrowTrade.messages) state.escrowTrade.messages=[];
-  state.escrowTrade.messages.push({
-    from: state.user?.username||'You',
-    text: el.value.trim(),
-    time: new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),
-  });
-  updateTrade();
-  el.value='';
-  render();
-  // scroll chat to bottom
-  setTimeout(()=>{
-    const chat=document.getElementById('chat-messages');
-    if(chat) chat.scrollTop=chat.scrollHeight;
-  },50);
+// ── PROFILE ────────────────────────────────────────────────
+function buildProfile(){
+  var u=S.user||{username:'Guest',completedTrades:0,rating:'New'};
+  return '<div><div class="topbar"><div class="topbar-logo">My <span>Profile</span></div><button class="btn btn-sm btn-ghost" id="logout-btn" style="padding:7px 12px;font-size:12px">Log Out</button></div>'
+    +'<div class="page"><div class="profile-header fade-up"><div class="profile-avatar-big" style="background:'+aColor(u.username)+'22;color:'+aColor(u.username)+'">'+ini(u.username)+'</div>'
+    +'<div><div class="profile-name">'+u.username+'</div><div class="profile-handle">@'+u.username.toLowerCase()+'</div><div class="profile-stats"><div><div class="pstat-val">'+(u.completedTrades||0)+'</div><div class="pstat-label">Trades</div></div><div><div class="pstat-val">'+(u.rating||'New')+'</div><div class="pstat-label">Rating</div></div><div><div class="pstat-val">0%</div><div class="pstat-label">Disputes</div></div></div></div></div>'
+    +'<div style="padding:6px 0">'
+    +[{i:'🔐',bg:'rgba(0,229,160,.1)',t:'Security',s:'2FA, password'},
+      {i:'💳',bg:'rgba(0,112,243,.1)',t:'Payment Methods',s:'Bank, PayPal, cards'},
+      {i:'📊',bg:'rgba(247,147,26,.1)',t:'Trade History',s:S.trades.length+' trades'},
+      {i:'🛡️',bg:'rgba(168,85,247,.1)',t:'KYC Verification',s:'Increase limits'},
+      {i:'🔔',bg:'rgba(6,182,212,.1)',t:'Notifications',s:'Alerts & email'},
+      {i:'📖',bg:'rgba(126,142,168,.1)',t:'Help & Support',s:'FAQ, live chat'}
+    ].map(function(m){return '<div class="menu-item"><div class="menu-icon" style="background:'+m.bg+'">'+m.i+'</div><div class="menu-text"><div class="menu-title">'+m.t+'</div><div class="menu-sub">'+m.s+'</div></div><div style="color:var(--text3)">›</div></div>';}).join('')
+    +'</div><div style="padding:16px;text-align:center;font-size:11px;color:var(--text3)">SwapGuard v1.0.0 · Secured by escrow</div>'
+    +'</div></div>';
 }
 
-// ───────────────────────────────────────────────────────────
-// RATING MODAL
-// ───────────────────────────────────────────────────────────
-function buildRatingModal(t){
-  return `<div class="modal-overlay">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-title">⭐ Rate your Trader</div>
-      <div class="modal-body">
-        <div style="text-align:center;padding:12px 0 20px">
-          <div style="font-size:36px;margin-bottom:10px">${t.type==='buy'?'🛍️':'💰'}</div>
-          <div style="font-size:15px;font-weight:700;margin-bottom:4px">@${t.counterparty}</div>
-          <div style="font-size:12px;color:var(--text2)">How was your experience?</div>
-          <div style="display:flex;justify-content:center;gap:12px;margin-top:20px">
-            ${[1,2,3,4,5].map(s=>`<button class="rating-star-btn" data-star="${s}" style="background:none;border:none;cursor:pointer;font-size:32px;transition:transform .15s;${state.pendingRating>=s?'filter:none':'filter:grayscale(1) opacity(.4)'}">⭐</button>`).join('')}
-          </div>
-        </div>
-        <button class="btn btn-primary" id="submit-rating">Submit Rating</button>
-        <button class="btn btn-secondary" style="margin-top:10px" id="close-rating-modal">Skip</button>
-      </div>
-    </div>
-  </div>`;
+// ── RATING MODAL ───────────────────────────────────────────
+function buildRatingModal(){
+  var t=S.escrowTrade||{counterparty:'Trader',type:'buy'};
+  return '<div class="modal-overlay"><div class="modal-sheet"><div class="modal-handle"></div>'
+    +'<div class="modal-title">⭐ Rate your Trader</div><div class="modal-body">'
+    +'<div style="text-align:center;padding:12px 0 20px"><div style="font-size:36px;margin-bottom:10px">'+(t.type==='buy'?'🛍️':'💰')+'</div>'
+    +'<div style="font-size:15px;font-weight:700;margin-bottom:4px">@'+t.counterparty+'</div>'
+    +'<div style="font-size:12px;color:var(--text2)">How was your experience?</div>'
+    +'<div style="display:flex;justify-content:center;gap:12px;margin-top:20px">'
+    +[1,2,3,4,5].map(function(s){return '<button class="rating-star" data-star="'+s+'" style="background:none;border:none;cursor:pointer;font-size:32px;'+(S.pendingRating>=s?'':'filter:grayscale(1) opacity(.4)')+'">⭐</button>';}).join('')
+    +'</div></div>'
+    +'<button class="btn btn-primary" id="submit-rating">Submit Rating</button>'
+    +'<button class="btn btn-secondary" style="margin-top:10px" id="close-rating">Skip</button>'
+    +'</div></div></div>';
 }
 
-// ───────────────────────────────────────────────────────────
-// NOTIFICATIONS PANEL
-// ───────────────────────────────────────────────────────────
+// ── NOTIF PANEL ────────────────────────────────────────────
 function buildNotifPanel(){
-  return `<div class="modal-overlay" id="notif-overlay">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 16px;border-bottom:1px solid var(--border)">
-        <div style="font-size:17px;font-weight:800">Notifications</div>
-        <button id="close-notif" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button>
-      </div>
-      <div style="padding:8px 0;max-height:70vh;overflow-y:auto">
-        ${state.notifications.length===0
-          ? `<div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-text">No notifications yet</div></div>`
-          : state.notifications.map(n=>buildNotifItem(n)).join('')}
-      </div>
-    </div>
-  </div>`;
+  return '<div class="modal-overlay"><div class="modal-sheet"><div class="modal-handle"></div>'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 16px;border-bottom:1px solid var(--border)"><div style="font-size:17px;font-weight:800">Notifications</div><button id="close-notif" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button></div>'
+    +'<div style="padding:8px 0;max-height:70vh;overflow-y:auto">'
+    +(S.notifications.length===0?'<div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-text">No notifications</div></div>':S.notifications.map(function(n){
+      var icons2={system:'📢',trade:'🔐',payment:'💸',release:'🎉',dispute:'⚠️'};
+      return '<div style="display:flex;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);'+(n.read?'':'background:rgba(0,229,160,.03)')+'"><div style="width:36px;height:36px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+(icons2[n.type]||'📢')+'</div><div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:3px">'+n.title+'</div><div style="font-size:12px;color:var(--text2);line-height:1.5">'+n.body+'</div><div style="font-size:10px;color:var(--text3);margin-top:4px">'+n.time+'</div></div>'+(n.read?'':'<div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div>')+'</div>';
+    }).join(''))
+    +'</div></div></div>';
 }
 
-function buildNotifItem(n){
-  const icons = { trade:'🔐', payment:'💸', release:'🎉', dispute:'⚠️', system:'📢' };
-  return `<div style="display:flex;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);${!n.read?'background:rgba(0,229,160,.03)':''}">
-    <div style="width:36px;height:36px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${icons[n.type]||'📢'}</div>
-    <div style="flex:1">
-      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">${n.title}</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.5">${n.body}</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px">${n.time}</div>
-    </div>
-    ${!n.read?`<div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div>`:''}
-  </div>`;
-}
-
-function pushNotif(type, title, body){
-  state.notifications.unshift({
-    id: Date.now(), type, title, body,
-    time: new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),
-    read: false,
-  });
-  // Telegram haptic feedback
-  tg?.HapticFeedback?.notificationOccurred('success');
-}
-
-// ───────────────────────────────────────────────────────────
-// API CLIENT (connects to bot.js backend)
-// ───────────────────────────────────────────────────────────
-const API_BASE = window.location.origin.includes('localhost') || window.location.protocol==='file:'
-  ? 'https://eaf869db-8776-4f6d-945f-03c022657bae-00-1zpx4ftbbugfh.spock.replit.dev/'  // change to your deployed API
-  : window.location.origin;
-
-const API = {
-  headers() {
-    const h = { 'Content-Type': 'application/json' };
-    if(tg?.initData) h['x-telegram-init-data'] = tg.initData;
-    return h;
-  },
-  async post(path, body){
-    try {
-      const r = await fetch(`${API_BASE}${path}`, { method:'POST', headers:this.headers(), body: JSON.stringify(body) });
-      return await r.json();
-    } catch(e){ console.warn('API offline, using local state:', e.message); return null; }
-  },
-  async get(path){
-    try {
-      const r = await fetch(`${API_BASE}${path}`, { headers:this.headers() });
-      return await r.json();
-    } catch(e){ console.warn('API offline:', e.message); return null; }
-  },
-};
-
-// ───────────────────────────────────────────────────────────
-// HELPERS & STATE UPDATES
-// ───────────────────────────────────────────────────────────
-function updateTrade(){
-  const idx = state.trades.findIndex(t=>t.id===state.escrowTrade.id);
-  if(idx>=0) state.trades[idx]=state.escrowTrade;
-}
-
-function unreadNotifCount(){
-  return state.notifications.filter(n=>!n.read).length;
-}
-
-// ───────────────────────────────────────────────────────────
-// FULL buildApp (replaces original)
-// ───────────────────────────────────────────────────────────
-function buildApp(){
-  const showNav = state.user && state.page !== 'landing' && state.page !== 'auth';
-  const unread  = unreadNotifCount();
-  return `
-    ${state.toast ? `<div class="toast toast-${state.toast.type}">${state.toast.msg}</div>` : ''}
-    ${state.tradeModal     ? buildTradeModal()    : ''}
-    ${state.postOfferModal ? buildPostOfferModal(): ''}
-    ${state.ratingModal    ? buildRatingModal(state.escrowTrade) : ''}
-    ${state.notifOpen      ? buildNotifPanel()    : ''}
-    ${buildPage()}
-    ${showNav ? buildNavWithBadge(unread) : ''}
-  `;
-}
-
-function buildNavWithBadge(unread){
-  const tabs = [
-    {id:'p2p',    icon: iconP2P(),     label:'P2P'},
-    {id:'trades', icon: iconTrades(),  label:'Trades'},
-    {id:'profile',icon: iconProfile(), label:'Profile'},
-  ];
-  return `<nav class="bottom-nav">
-    ${tabs.map(t=>`
-      <button class="nav-btn${state.page===t.id?' active':''}" data-nav="${t.id}">
-        <div style="position:relative;display:inline-flex">
-          ${t.icon}
-          ${t.id==='trades'&&unread>0?`<span style="position:absolute;top:-4px;right:-6px;background:var(--danger);color:#fff;border-radius:50%;width:14px;height:14px;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:800">${unread}</span>`:''}
-        </div>
-        <span>${t.label}</span>
-      </button>`).join('')}
-  </nav>`;
-}
-
-// ───────────────────────────────────────────────────────────
-// FULL buildEscrow with chat + rating CTA
-// ───────────────────────────────────────────────────────────
-function buildEscrow(){
-  const t = state.escrowTrade;
-  if(!t) return `<div class="page"><div class="empty-state"><div class="empty-icon">🔐</div><div class="empty-text">No active trade</div></div></div>`;
-  const steps = ['Created','Locked','Paid','Released'];
-  const stepIdx = ['created','locked','paid','released'].indexOf(t.status);
-  const isBuyer = t.role==='buyer';
-  const chatHtml = buildTradeChat(t);
-  const ratingCta = t.status==='released' && !t.rated
-    ? `<div style="padding:0 16px 8px"><button class="btn btn-secondary" id="open-rating-btn">⭐ Rate @${t.counterparty}</button></div>`
-    : '';
-  return `<div>
-    <div class="topbar">
-      <button style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:22px;padding:0 8px 0 0" id="back-p2p">←</button>
-      <div class="topbar-logo">Swap<span>Guard</span></div>
-      <span class="badge ${t.status==='released'?'badge-green':t.status==='disputed'?'badge-red':'badge-blue'}">${t.status.toUpperCase()}</span>
-    </div>
-    <div class="page">
-      <div style="padding:16px 16px 0">
-        <div style="font-size:20px;font-weight:800;margin-bottom:4px">${t.coin} Escrow Trade</div>
-        <div style="font-size:12px;color:var(--text2);font-family:var(--mono)">Trade ID: ${t.id}</div>
-      </div>
-      <div style="padding:20px 0">
-        <div class="escrow-progress">
-          ${steps.map((s,i)=>`
-            ${i>0?`<div class="escrow-line${i<=stepIdx?' done':''}"></div>`:''}
-            <div class="escrow-step">
-              <div class="escrow-step-dot${i<stepIdx?' done':i===stepIdx?' active':''}">
-                ${i<stepIdx?'✓':i+1}
-              </div>
-              <div class="escrow-step-label${i===stepIdx?' active':''}">${s}</div>
-            </div>`).join('')}
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Trade Details</div></div>
-        ${[
-          ['Trade ID', t.id],
-          ['Coin', t.coin],
-          ['Amount', `${t.cryptoAmt} ${t.coin}`],
-          ['You Pay', `$${t.fiatAmt}`],
-          ['Rate', `$${t.rate.toLocaleString()}`],
-          ['Payment', t.payMethod],
-          [isBuyer?'Seller':'Buyer', `@${t.counterparty}`],
-          ['Escrow Fee', `$${t.fee}`],
-        ].map(([k,v])=>`<div class="info-row"><span class="info-label">${k}</span><span style="font-family:var(--mono);font-size:13px;font-weight:700">${v}</span></div>`).join('')}
-      </div>
-      ${buildEscrowActions(t, isBuyer)}
-      ${chatHtml}
-      ${ratingCta}
-      <div class="card">
-        <div class="card-header"><div class="card-title">🔐 Escrow Security</div></div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.7">
-          ${t.cryptoAmt} ${t.coin} is locked in SwapGuard escrow. Funds will only release when the seller confirms payment receipt.
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-          <span class="security-chip">🔒 Multi-sig</span>
-          <span class="security-chip">⏱️ 24h Dispute</span>
-          <span class="security-chip">🤝 Arbitration</span>
-        </div>
-      </div>
-      ${t.status !== 'released' && t.status !== 'disputed' ? `
-      <div style="padding:0 16px 16px">
-        <button class="btn btn-danger" id="open-dispute">⚠️ Open Dispute</button>
-      </div>` : ''}
-    </div>
-  </div>`;
-}
-
-// ───────────────────────────────────────────────────────────
-// FULL bindEvents (replaces original)
-// ───────────────────────────────────────────────────────────
+// ── EVENTS ─────────────────────────────────────────────────
 function bindEvents(){
-  // Navigation
-  document.querySelectorAll('[data-nav]').forEach(el=>
-    el.addEventListener('click',()=>{ state.page=el.dataset.nav; render(); }));
-
-  // Landing
-  const ctaStart = document.getElementById('cta-start');
-  if(ctaStart) ctaStart.addEventListener('click',()=>{ state.page=state.user?'p2p':'auth'; render(); });
-  const ctaBrowse = document.getElementById('cta-browse');
-  if(ctaBrowse) ctaBrowse.addEventListener('click',()=>{ state.page=state.user?'p2p':'auth'; render(); });
-
-  // Auth tabs
-  const tabLogin = document.getElementById('tab-login');
-  if(tabLogin) tabLogin.addEventListener('click',()=>{ state.authTab='login'; render(); });
-  const tabSignup = document.getElementById('tab-signup');
-  if(tabSignup) tabSignup.addEventListener('click',()=>{ state.authTab='signup'; render(); });
-
-  // Telegram auth
-  const tgAuth = document.getElementById('tg-auth');
-  if(tgAuth) tgAuth.addEventListener('click',()=>{
-    state.user = { username: tgUser?.username||tgUser?.first_name||'TGUser', email:'telegram@user', completedTrades:0, rating:'New' };
-    state.page='p2p'; render(); toast('Welcome! 🎉');
+  // nav
+  document.querySelectorAll('[data-nav]').forEach(function(el){
+    el.addEventListener('click',function(){S.page=el.dataset.nav;render();});
   });
-
-  // Auth form fields
-  ['f-username','f-email','f-password'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.addEventListener('input', e=>{
-      const key = id.replace('f-','');
-      if(state.authTab==='login') state.loginForm[key]=e.target.value;
-      else state.signupForm[key]=e.target.value;
+  // landing
+  var e;
+  e=document.getElementById('cta-start'); if(e) e.addEventListener('click',function(){S.page=S.user?'p2p':'auth';render();});
+  e=document.getElementById('cta-browse'); if(e) e.addEventListener('click',function(){S.page=S.user?'p2p':'auth';render();});
+  // auth tabs
+  e=document.getElementById('tab-login'); if(e) e.addEventListener('click',function(){S.authTab='login';render();});
+  e=document.getElementById('tab-signup'); if(e) e.addEventListener('click',function(){S.authTab='signup';render();});
+  // tg auth
+  e=document.getElementById('tg-auth'); if(e) e.addEventListener('click',function(){
+    S.user={id:tgUser.id,username:tgUser.username||tgUser.first_name||'TGUser',email:'tg@user',completedTrades:0,rating:'New'};
+    S.page='p2p';render();toast('Welcome! 🎉');
+  });
+  // form fields
+  ['f-username','f-email','f-password'].forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    el.addEventListener('input',function(ev){
+      var k=id.replace('f-','');
+      if(S.authTab==='login') S.loginForm[k]=ev.target.value;
+      else S.signupForm[k]=ev.target.value;
     });
   });
-
-  const togglePw = document.getElementById('toggle-pw');
-  if(togglePw) togglePw.addEventListener('click',()=>{ state.showPassword=!state.showPassword; render(); });
-
-  const authSubmit = document.getElementById('auth-submit');
-  if(authSubmit) authSubmit.addEventListener('click',()=>{
-    if(state.authTab==='login'){
-      const {email, password} = state.loginForm;
-      if(!email||!password){ toast('Please fill in all fields','error'); return; }
-      state.user = { username: email.split('@')[0]||'Trader', email, completedTrades:0, rating:'New' };
-      state.page='p2p'; render(); toast('Signed in! 🎉');
+  e=document.getElementById('toggle-pw'); if(e) e.addEventListener('click',function(){S.showPw=!S.showPw;render();});
+  e=document.getElementById('auth-submit'); if(e) e.addEventListener('click',function(){
+    if(S.authTab==='login'){
+      var email=S.loginForm.email,pw=S.loginForm.password;
+      if(!email||!pw){toast('Fill in all fields','error');return;}
+      S.user={username:email.split('@')[0]||'Trader',email:email,completedTrades:0,rating:'New'};
+      S.page='p2p';render();toast('Signed in! 🎉');
     } else {
-      const {username, email, password} = state.signupForm;
-      if(!username||!email||!password){ toast('Fill in all fields','error'); return; }
-      if(password.length<8){ toast('Password must be 8+ characters','error'); return; }
-      state.user = { username, email, completedTrades:0, rating:'New' };
-      state.page='p2p'; render(); toast('Account created! 🎉');
+      var un=S.signupForm.username,em=S.signupForm.email,pw2=S.signupForm.password;
+      if(!un||!em||!pw2){toast('Fill in all fields','error');return;}
+      if(pw2.length<8){toast('Password must be 8+ chars','error');return;}
+      S.user={username:un,email:em,completedTrades:0,rating:'New'};
+      S.page='p2p';render();toast('Account created! 🎉');
     }
   });
-
-  // P2P tabs/filters
-  const tabBuy = document.getElementById('p2p-tab-buy');
-  if(tabBuy) tabBuy.addEventListener('click',()=>{ state.p2pTab='buy'; render(); });
-  const tabSell = document.getElementById('p2p-tab-sell');
-  if(tabSell) tabSell.addEventListener('click',()=>{ state.p2pTab='sell'; render(); });
-
-  document.querySelectorAll('[data-coin]').forEach(el=>
-    el.addEventListener('click',()=>{ state.p2pCoin=el.dataset.coin; render(); }));
-
-  // Offer cards
-  document.querySelectorAll('[data-offer]').forEach(el=>{
-    el.addEventListener('click', e=>{
-      if(e.target.dataset.trade) return;
-      if(!state.user){ state.page='auth'; render(); return; }
-      const offer = state.offers.find(o=>o.id===el.dataset.offer);
-      if(offer){ state.activeOffer=offer; state.tradeModal=true; state.tradeForm={amount:'',payMethod:offer.payMethods[0]}; render(); }
+  // p2p
+  e=document.getElementById('p2p-buy'); if(e) e.addEventListener('click',function(){S.p2pTab='buy';render();});
+  e=document.getElementById('p2p-sell'); if(e) e.addEventListener('click',function(){S.p2pTab='sell';render();});
+  document.querySelectorAll('[data-coin]').forEach(function(el){
+    el.addEventListener('click',function(){S.p2pCoin=el.dataset.coin;render();});
+  });
+  // offer cards
+  document.querySelectorAll('[data-offer]').forEach(function(el){
+    el.addEventListener('click',function(ev){
+      if(ev.target.dataset.trade) return;
+      if(!S.user){S.page='auth';render();return;}
+      var o=S.offers.find(function(x){return x.id===el.dataset.offer;});
+      if(o){S.activeOffer=o;S.tradeModal=true;S.tradeForm={amount:'',payMethod:o.payMethods[0]};render();}
     });
   });
-
-  document.querySelectorAll('[data-trade]').forEach(el=>{
-    el.addEventListener('click', e=>{
-      e.stopPropagation();
-      if(!state.user){ state.page='auth'; render(); return; }
-      const offer = state.offers.find(o=>o.id===el.dataset.trade);
-      if(offer){ state.activeOffer=offer; state.tradeModal=true; state.tradeForm={amount:'',payMethod:offer.payMethods[0]}; render(); }
+  document.querySelectorAll('[data-trade]').forEach(function(el){
+    el.addEventListener('click',function(ev){
+      ev.stopPropagation();
+      if(!S.user){S.page='auth';render();return;}
+      var o=S.offers.find(function(x){return x.id===el.dataset.trade;});
+      if(o){S.activeOffer=o;S.tradeModal=true;S.tradeForm={amount:'',payMethod:o.payMethods[0]};render();}
     });
   });
-
-  // Modal
-  const modalOverlay = document.getElementById('modal-overlay');
-  if(modalOverlay) modalOverlay.addEventListener('click', e=>{
-    if(e.target===modalOverlay){ state.tradeModal=false; render(); }
-  });
-  const closeModal = document.getElementById('close-modal');
-  if(closeModal) closeModal.addEventListener('click',()=>{ state.tradeModal=false; render(); });
-
-  const tradeAmtEl = document.getElementById('trade-amount');
-  if(tradeAmtEl) tradeAmtEl.addEventListener('input', e=>{ state.tradeForm.amount=e.target.value; render(); });
-  const tradePayEl = document.getElementById('trade-pay');
-  if(tradePayEl) tradePayEl.addEventListener('change', e=>{ state.tradeForm.payMethod=e.target.value; render(); });
-
-  const confirmTrade = document.getElementById('confirm-trade');
-  if(confirmTrade) confirmTrade.addEventListener('click',()=>{
-    const o = state.activeOffer;
-    const amt = parseFloat(state.tradeForm.amount);
-    const cryptoAmt = (amt/o.price).toFixed(8);
-    const fee = (amt*0.005).toFixed(2);
-    const trade = {
-      id: 'TRD-'+Date.now().toString(36).toUpperCase(),
-      type: o.type, coin: o.coin,
-      fiatAmt: amt.toFixed(2), cryptoAmt, fee,
-      rate: o.price, payMethod: state.tradeForm.payMethod,
-      counterparty: o.username,
-      status: 'created', role: 'buyer', messages: [],
-      date: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+  // trade modal
+  e=document.getElementById('modal-overlay'); if(e) e.addEventListener('click',function(ev){if(ev.target===e){S.tradeModal=false;render();}});
+  e=document.getElementById('close-modal'); if(e) e.addEventListener('click',function(){S.tradeModal=false;render();});
+  e=document.getElementById('trade-amount'); if(e) e.addEventListener('input',function(ev){S.tradeForm.amount=ev.target.value;render();});
+  e=document.getElementById('trade-pay'); if(e) e.addEventListener('change',function(ev){S.tradeForm.payMethod=ev.target.value;render();});
+  e=document.getElementById('confirm-trade'); if(e) e.addEventListener('click',function(){
+    var o=S.activeOffer,amt=parseFloat(S.tradeForm.amount);
+    var trade={
+      id:'TRD-'+Date.now().toString(36).toUpperCase(),
+      type:o.type,coin:o.coin,
+      fiatAmt:amt.toFixed(2),cryptoAmt:(amt/o.price).toFixed(8),
+      fee:(amt*0.005).toFixed(2),rate:o.price,
+      payMethod:S.tradeForm.payMethod,counterparty:o.username,
+      status:'created',role:'buyer',messages:[],
+      date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})
     };
-    state.trades.unshift(trade);
-    state.escrowTrade = trade;
-    state.tradeModal = false;
-    state.page = 'escrow';
-    render();
-    toast(`Escrow opened! 🔐 ${trade.id}`);
+    S.trades.unshift(trade);S.escrowTrade=trade;S.tradeModal=false;S.page='escrow';
+    render();toast('Escrow opened! 🔐 '+trade.id);
   });
-
-  // Escrow actions
-  const lockEscrow = document.getElementById('lock-escrow');
-  if(lockEscrow) lockEscrow.addEventListener('click',()=>{ state.escrowTrade.status='locked'; updateTrade(); render(); toast('Locked in escrow! 🔐'); });
-  const confirmPaid = document.getElementById('confirm-paid');
-  if(confirmPaid) confirmPaid.addEventListener('click',()=>{ state.escrowTrade.status='paid'; updateTrade(); render(); toast('Payment confirmed! ⏳'); });
-  const releaseEscrow = document.getElementById('release-escrow');
-  if(releaseEscrow) releaseEscrow.addEventListener('click',()=>{ state.escrowTrade.status='released'; updateTrade(); render(); toast('Trade complete! 🎉'); });
-  const openDispute = document.getElementById('open-dispute');
-  if(openDispute) openDispute.addEventListener('click',()=>{ state.escrowTrade.status='disputed'; updateTrade(); render(); toast('Dispute opened ⚠️','error'); });
-  const backP2p = document.getElementById('back-p2p');
-  if(backP2p) backP2p.addEventListener('click',()=>{ state.page='p2p'; render(); });
-
-  // Trade view
-  document.querySelectorAll('[data-trade-view]').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const t = state.trades.find(x=>x.id===el.dataset.tradeView);
-      if(t){ state.escrowTrade=t; state.page='escrow'; render(); }
+  // escrow
+  e=document.getElementById('lock-escrow'); if(e) e.addEventListener('click',function(){S.escrowTrade.status='locked';upTrade();render();toast('Locked in escrow! 🔐');});
+  e=document.getElementById('confirm-paid'); if(e) e.addEventListener('click',function(){S.escrowTrade.status='paid';upTrade();render();toast('Payment confirmed! ⏳');});
+  e=document.getElementById('release-escrow'); if(e) e.addEventListener('click',function(){S.escrowTrade.status='released';upTrade();render();toast('Trade complete! 🎉');});
+  e=document.getElementById('open-dispute'); if(e) e.addEventListener('click',function(){S.escrowTrade.status='disputed';upTrade();render();toast('Dispute opened ⚠️','error');});
+  e=document.getElementById('back-p2p'); if(e) e.addEventListener('click',function(){S.page='p2p';render();});
+  // trade chat
+  e=document.getElementById('chat-send'); if(e) e.addEventListener('click',sendChat);
+  e=document.getElementById('chat-input'); if(e) e.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();sendChat();}});
+  // trade view
+  document.querySelectorAll('[data-trade-view]').forEach(function(el){
+    el.addEventListener('click',function(){
+      var t=S.trades.find(function(x){return x.id===el.dataset.tradeView;});
+      if(t){S.escrowTrade=t;S.page='escrow';render();}
     });
   });
-
-  // Profile
-  const logoutBtn = document.getElementById('logout-btn');
-  if(logoutBtn) logoutBtn.addEventListener('click',()=>{ state.user=null; state.page='landing'; render(); toast('Logged out','info'); });
-  const goP2p = document.getElementById('go-p2p');
-  if(goP2p) goP2p.addEventListener('click',()=>{ state.page='p2p'; render(); });
-
-  // Post offer
-  const createOffer = document.getElementById('create-offer');
-  if(createOffer) createOffer.addEventListener('click',()=>{
-    if(!state.user){ state.page='auth'; render(); return; }
-    state.postOfferModal=true; render();
-  });
-  const closePost = document.getElementById('close-post-modal');
-  if(closePost) closePost.addEventListener('click',()=>{ state.postOfferModal=false; render(); });
-
-  ['po-type','po-coin','po-price','po-min','po-max'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(!el) return;
-    el.addEventListener('change',e=>{ state.postForm[id.replace('po-','')]=e.target.value; render(); });
-    el.addEventListener('input', e=>{ state.postForm[id.replace('po-','')]=e.target.value; render(); });
-  });
-
-  document.querySelectorAll('.po-pay-chip').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const m=el.dataset.pay, arr=state.postForm.payMethods, idx=arr.indexOf(m);
-      if(idx>=0) arr.splice(idx,1); else arr.push(m);
+  // post offer
+  e=document.getElementById('create-offer'); if(e) e.addEventListener('click',function(){if(!S.user){S.page='auth';render();return;}S.postModal=true;render();});
+  e=document.getElementById('close-post'); if(e) e.addEventListener('click',function(){S.postModal=false;render();});
+  e=document.getElementById('po-type'); if(e) e.addEventListener('change',function(ev){S.postForm.type=ev.target.value;render();});
+  e=document.getElementById('po-coin'); if(e) e.addEventListener('change',function(ev){S.postForm.coin=ev.target.value;render();});
+  e=document.getElementById('po-price'); if(e) e.addEventListener('input',function(ev){S.postForm.price=ev.target.value;});
+  e=document.getElementById('po-min'); if(e) e.addEventListener('input',function(ev){S.postForm.min=ev.target.value;});
+  e=document.getElementById('po-max'); if(e) e.addEventListener('input',function(ev){S.postForm.max=ev.target.value;});
+  document.querySelectorAll('.po-pay').forEach(function(el){
+    el.addEventListener('click',function(){
+      var m=el.dataset.pay,arr=S.postForm.payMethods,i=arr.indexOf(m);
+      if(i>=0) arr.splice(i,1); else arr.push(m);
       render();
     });
   });
-
-  const submitPost = document.getElementById('submit-post-offer');
-  if(submitPost) submitPost.addEventListener('click',()=>{
-    const f=state.postForm;
-    if(!f.price||!f.min||!f.max){ toast('Fill in all fields','error'); return; }
-    if(parseFloat(f.min)>=parseFloat(f.max)){ toast('Min must be less than Max','error'); return; }
-    if(!f.payMethods.length){ toast('Select a payment method','error'); return; }
-    const newOffer = {
-      id:'OFF-'+Math.random().toString(36).substr(2,6).toUpperCase(),
-      type:f.type, coin:f.coin, price:parseFloat(f.price),
-      minAmount:parseFloat(f.min), maxAmount:parseFloat(f.max),
-      payMethods:[...f.payMethods], username:state.user.username,
-      trades:0, completion:100, rating:5.0, avgTime:15, online:true, ownerId:state.user.id||0,
-    };
-    state.offers.unshift(newOffer);
-    state.postOfferModal=false;
-    state.p2pCoin=newOffer.coin; state.p2pTab=newOffer.type; state.page='p2p';
-    render(); toast(`Offer posted! 🎉`);
+  e=document.getElementById('submit-post'); if(e) e.addEventListener('click',function(){
+    var f=S.postForm;
+    if(!f.price||!f.min||!f.max){toast('Fill in all fields','error');return;}
+    if(parseFloat(f.min)>=parseFloat(f.max)){toast('Min must be less than Max','error');return;}
+    if(!f.payMethods.length){toast('Pick a payment method','error');return;}
+    var no={id:'OFF-'+Math.random().toString(36).substr(2,6).toUpperCase(),
+      type:f.type,coin:f.coin,price:parseFloat(f.price),
+      minAmount:parseFloat(f.min),maxAmount:parseFloat(f.max),
+      payMethods:f.payMethods.slice(),username:S.user.username,
+      trades:0,completion:100,rating:5.0,avgTime:15,online:true};
+    S.offers.unshift(no);S.postModal=false;S.p2pCoin=no.coin;S.p2pTab=no.type;S.page='p2p';
+    render();toast('Offer posted! 🎉');
   });
-
-  // Chat
-  const chatSend = document.getElementById('chat-send');
-  if(chatSend) chatSend.addEventListener('click',()=>sendChatMsg());
-  const chatInput = document.getElementById('chat-input');
-  if(chatInput) chatInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); sendChatMsg(); }});
-
-  // Rating
-  const closeRating = document.getElementById('close-rating-modal');
-  if(closeRating) closeRating.addEventListener('click',()=>{ state.ratingModal=false; render(); });
-  document.querySelectorAll('.rating-star-btn').forEach(el=>{
-    el.addEventListener('click',()=>{ state.pendingRating=parseInt(el.dataset.star); render(); });
+  // profile
+  e=document.getElementById('logout-btn'); if(e) e.addEventListener('click',function(){S.user=null;S.page='landing';render();toast('Logged out','info');});
+  e=document.getElementById('go-p2p'); if(e) e.addEventListener('click',function(){S.page='p2p';render();});
+  // rating
+  e=document.getElementById('open-rating'); if(e) e.addEventListener('click',function(){S.ratingModal=true;S.pendingRating=0;render();});
+  e=document.getElementById('close-rating'); if(e) e.addEventListener('click',function(){S.ratingModal=false;render();});
+  e=document.getElementById('submit-rating'); if(e) e.addEventListener('click',function(){S.ratingModal=false;toast('Rated ⭐ '+S.pendingRating+'/5');render();});
+  document.querySelectorAll('.rating-star').forEach(function(el){
+    el.addEventListener('click',function(){S.pendingRating=parseInt(el.dataset.star);render();});
   });
-  const submitRating = document.getElementById('submit-rating');
-  if(submitRating) submitRating.addEventListener('click',()=>{ state.ratingModal=false; toast(`Rated ⭐ ${state.pendingRating}/5`); render(); });
-  const openRating = document.getElementById('open-rating-btn');
-  if(openRating) openRating.addEventListener('click',()=>{ state.ratingModal=true; state.pendingRating=0; render(); });
-
-  // Notifications
-  const notifBell = document.getElementById('notif-bell');
-  if(notifBell) notifBell.addEventListener('click',()=>{ state.notifOpen=!state.notifOpen; render(); });
-  const closeNotif = document.getElementById('close-notif');
-  if(closeNotif) closeNotif.addEventListener('click',()=>{ state.notifOpen=false; render(); });
-  if(state.notifOpen) state.notifications.forEach(n=>n.read=true);
+  // notif
+  e=document.getElementById('close-notif'); if(e) e.addEventListener('click',function(){S.notifOpen=false;render();});
+  // scroll chat
+  var cm=document.getElementById('chat-msgs'); if(cm) cm.scrollTop=cm.scrollHeight;
 }
 
-// ───────────────────────────────────────────────────────────
-// INIT
-// ───────────────────────────────────────────────────────────
-try {
-  // Extra state fields
-  Object.assign(state, {
-    postOfferModal: false,
-    ratingModal:    false,
-    pendingRating:  0,
-    notifOpen:      false,
-    notifications:  [
-      { id:1, type:'system', title:'Welcome to SwapGuard!', body:'Secure P2P crypto escrow is now live.', time:'Just now', read:false },
-      { id:2, type:'trade',  title:'New: Trade Chat', body:'Coordinate with your counterparty inside each trade.', time:'2m ago', read:false },
-    ],
-    postForm: { type:'sell', coin:'BTC', price:'', min:'', max:'', payMethods:[] },
-  });
-
-  // Auto-login from Telegram
-  if(tgUser){
-    state.user = {
-      id:              tgUser.id,
-      username:        tgUser.username || tgUser.first_name || 'TGUser',
-      email:           'telegram@user',
-      completedTrades: 0,
-      rating:          'New',
-    };
-    state.page = 'p2p';
-  } else {
-    state.page = 'landing';
-  }
-
-  render();
-
-  // Live price ticks every 15s
-  setInterval(()=>{
-    COINS.forEach(c=>{ PRICES[c]=+(PRICES[c]*(1+(Math.random()-.5)*.004)).toFixed(c==='USDT'?4:2); });
-    if(state.page==='p2p'&&!state.tradeModal) render();
-  }, 15000);
-
-} catch(err) {
-  document.body.style.background = '#0a0b0f';
-  document.body.style.color = '#00e5a0';
-  document.body.style.fontFamily = 'monospace';
-  document.body.style.padding = '20px';
-  document.body.innerHTML = '<h2>Error</h2><pre>'+err.stack+'</pre>';
+function sendChat(){
+  var el=document.getElementById('chat-input');
+  if(!el||!el.value.trim()) return;
+  if(!S.escrowTrade.messages) S.escrowTrade.messages=[];
+  S.escrowTrade.messages.push({from:S.user?S.user.username:'You',text:el.value.trim(),time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})});
+  upTrade();el.value='';render();
 }
+
+function upTrade(){
+  var i=S.trades.findIndex(function(t){return t.id===S.escrowTrade.id;});
+  if(i>=0) S.trades[i]=S.escrowTrade;
+}
+
+// ── INIT ───────────────────────────────────────────────────
+if(tgUser){
+  S.user={id:tgUser.id,username:tgUser.username||tgUser.first_name||'TGUser',email:'tg@user',completedTrades:0,rating:'New'};
+  S.page='p2p';
+} else {
+  S.page='landing';
+}
+
+render();
+
+setInterval(function(){
+  COINS.forEach(function(c){PRICES[c]=+(PRICES[c]*(1+(Math.random()-.5)*.004)).toFixed(c==='USDT'?4:2);});
+  if(S.page==='p2p'&&!S.tradeModal) render();
+},15000);
 </script>
 </body>
 </html>
