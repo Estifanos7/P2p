@@ -220,28 +220,26 @@
     }
 
     .modal {
-      background: linear-gradient(160deg, #181D23 0%, #13171C 100%);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 24px;
-      padding: 40px 36px 40px;
+      background: var(--surface);
+      border: 1px solid rgba(240,185,11,0.25);
+      border-radius: 20px;
+      padding: 40px 36px 36px;
       max-width: 380px;
       width: 100%;
       position: relative;
       overflow: hidden;
       text-align: center;
       box-shadow:
-        0 2px 0 rgba(255,255,255,0.05) inset,
-        0 40px 80px rgba(0,0,0,0.7),
-        0 0 0 1px rgba(255,255,255,0.04);
-      animation: modalIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        0 0 0 1px rgba(240,185,11,0.08),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(240,185,11,0.06);
+      animation: modalIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     @keyframes modalIn {
       from { opacity: 0; transform: translateY(28px) scale(0.96); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-
-
 
     .modal-badge {
       display: inline-flex;
@@ -270,12 +268,11 @@
     }
 
     .modal-title {
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 700;
-      letter-spacing: -1.5px;
-      line-height: 1.2;
-      margin-bottom: 20px;
-      color: #EAECEF;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 14px;
     }
     .modal-title span { color: var(--gold); }
 
@@ -294,11 +291,11 @@
     }
 
     .bot-cta {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
+      background: rgba(240,185,11,0.07);
+      border: 1px solid rgba(240,185,11,0.18);
+      border-radius: 12px;
       padding: 20px;
-      margin-bottom: 0;
+      margin-bottom: 20px;
       text-align: left;
     }
     .bot-cta-label {
@@ -320,19 +317,18 @@
       align-items: center;
       gap: 8px;
       background: var(--gold);
-      color: #0B0E11;
+      color: var(--bg);
       border: none;
-      border-radius: 10px;
-      padding: 11px 20px;
+      border-radius: 8px;
+      padding: 10px 18px;
       font-size: 13px;
       font-weight: 700;
       font-family: 'Inter', sans-serif;
       text-decoration: none;
-      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      transition: background 0.2s, transform 0.1s;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(240,185,11,0.25);
     }
-    .bot-btn:hover { background: #f5c842; box-shadow: 0 6px 20px rgba(240,185,11,0.35); }
+    .bot-btn:hover { background: #f5c842; }
     .bot-btn:active { transform: scale(0.97); }
 
     .modal-footer {
@@ -372,6 +368,35 @@
       .modal-title { font-size: 28px; }
       .nav-tabs { gap: 14px; font-size: 12px; }
     }
+
+    /* ── Express view ── */
+    .view { position: absolute; inset: 0; padding: 70px 20px 20px; display: flex; flex-direction: column; transition: opacity 0.35s ease, transform 0.35s ease; }
+    .view.hidden { opacity: 0; pointer-events: none; transform: translateX(-18px); }
+    .view.active { opacity: 1; pointer-events: none; transform: translateX(0); }
+
+    .buy-sell-tabs { display: flex; gap: 24px; margin-bottom: 28px; }
+    .bs-tab { font-size: 15px; font-weight: 600; color: var(--muted); padding-bottom: 6px; border-bottom: 2px solid transparent; }
+    .bs-tab.active { color: var(--text); border-color: var(--green); }
+
+    .express-coin { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+    .coin-icon { width: 28px; height: 28px; border-radius: 50%; background: #26A17B; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; }
+
+    .amount-display { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .amount-num { font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 300; color: var(--muted); letter-spacing: -2px; }
+    .amount-currency { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500; color: var(--muted); }
+
+    .rate-hint { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-bottom: auto; }
+    .rate-hint svg { color: var(--muted); }
+
+    .express-bottom { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+    .payment-btn { width: 100%; background: var(--green); color: white; border: none; border-radius: 12px; padding: 16px; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; }
+    .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .numpad-key { background: var(--surface); border: none; color: var(--text); font-size: 20px; font-weight: 500; font-family: 'Inter', sans-serif; padding: 16px; }
+    .numpad-key.muted { color: var(--muted); font-size: 16px; }
+
+    /* nav tabs cursor */
+    .nav-tabs span { cursor: pointer; transition: color 0.2s; }
+
   </style>
 </head>
 <body>
@@ -380,78 +405,79 @@
   <div class="topnav">
     <div class="nav-logo">P2Per.</div>
     <div class="nav-tabs">
-  <span id="tab-express">Express</span>
-  <span class="active" id="tab-p2p">P2P</span>
-  <span></span>
-</div>
-    
+      <span id="tab-express">Express</span>
+      <span class="active" id="tab-p2p">P2P</span>
+      <span></span>
+    </div>
     <div class="nav-pill">ETB ▾</div>
   </div>
 
   <!-- Landing page (gets blurred) -->
   <div class="landing blurred" id="landing">
 
-    <div class="filterbar">
-      <div class="filter-chip active">USDT <span class="arrow">▾</span></div>
-      <div class="filter-chip">Amount <span class="arrow">▾</span></div>
-      <div class="filter-chip">All Payment Methods <span class="arrow">▾</span></div>
+    <!-- P2P View -->
+    <div class="view active" id="view-p2p" style="align-items:center;">
+      <div class="filterbar" style="width:100%;max-width:520px;">
+        <div class="filter-chip active">USDT <span class="arrow">▾</span></div>
+        <div class="filter-chip">Amount <span class="arrow">▾</span></div>
+        <div class="filter-chip">All Payment Methods <span class="arrow">▾</span></div>
+      </div>
+      <div class="p2p-list">
+        <div class="p2p-card">
+          <div class="p2p-top">
+            <div class="p2p-user"><div class="p2p-avatar" style="background:#F0B90B;">A</div>Abebe_ETH</div>
+            <div class="p2p-orders">412 Orders (99%)</div>
+          </div>
+          <div class="p2p-rate">175.50 <span>ETB</span></div>
+          <div class="p2p-meta"><span>Limit <b>500 – 50,000 ETB</b></span><span>Available <b>1,200 USDT</b></span></div>
+          <div class="p2p-bottom"><div class="p2p-method">Telebirr · CBE</div><button class="p2p-btn">Buy</button></div>
+        </div>
+        <div class="p2p-card">
+          <div class="p2p-top">
+            <div class="p2p-user"><div class="p2p-avatar" style="background:#0ECB81;">S</div>Selam_Trade</div>
+            <div class="p2p-orders">1,033 Orders (100%)</div>
+          </div>
+          <div class="p2p-rate">174.80 <span>ETB</span></div>
+          <div class="p2p-meta"><span>Limit <b>1,000 – 200,000 ETB</b></span><span>Available <b>8,500 USDT</b></span></div>
+          <div class="p2p-bottom"><div class="p2p-method">Abyssinia · Awash</div><button class="p2p-btn">Buy</button></div>
+        </div>
+        <div class="p2p-card">
+          <div class="p2p-top">
+            <div class="p2p-user"><div class="p2p-avatar" style="background:#F6465D;">H</div>Haile_FX</div>
+            <div class="p2p-orders">287 Orders (98%)</div>
+          </div>
+          <div class="p2p-rate">174.20 <span>ETB</span></div>
+          <div class="p2p-meta"><span>Limit <b>200 – 20,000 ETB</b></span><span>Available <b>340 USDT</b></span></div>
+          <div class="p2p-bottom"><div class="p2p-method">Telebirr</div><button class="p2p-btn sell">Sell</button></div>
+        </div>
+      </div>
     </div>
 
-    <div class="p2p-list">
-      <div class="p2p-card">
-        <div class="p2p-top">
-          <div class="p2p-user">
-            <div class="p2p-avatar" style="background:#F0B90B;">A</div>
-            Abebe_ETH
-          </div>
-          <div class="p2p-orders">412 Orders (99%)</div>
-        </div>
-        <div class="p2p-rate">175.50 <span>ETB</span></div>
-        <div class="p2p-meta">
-          <span>Limit <b>500 – 50,000 ETB</b></span>
-          <span>Available <b>1,200 USDT</b></span>
-        </div>
-        <div class="p2p-bottom">
-          <div class="p2p-method">Telebirr · CBE</div>
-          <button class="p2p-btn">Buy</button>
-        </div>
+    <!-- Express View -->
+    <div class="view hidden" id="view-express">
+      <div class="buy-sell-tabs">
+        <div class="bs-tab active">Buy</div>
+        <div class="bs-tab">Sell</div>
       </div>
-
-      <div class="p2p-card">
-        <div class="p2p-top">
-          <div class="p2p-user">
-            <div class="p2p-avatar" style="background:#0ECB81;">S</div>
-            Selam_Trade
-          </div>
-          <div class="p2p-orders">1,033 Orders (100%)</div>
-        </div>
-        <div class="p2p-rate">174.80 <span>ETB</span></div>
-        <div class="p2p-meta">
-          <span>Limit <b>1,000 – 200,000 ETB</b></span>
-          <span>Available <b>8,500 USDT</b></span>
-        </div>
-        <div class="p2p-bottom">
-          <div class="p2p-method">Abyssinia · Awash</div>
-          <button class="p2p-btn">Buy</button>
-        </div>
+      <div class="express-coin">
+        <div class="coin-icon">T</div>
+        USDT <span style="color:var(--muted);font-size:12px;">▾</span>
       </div>
-
-      <div class="p2p-card">
-        <div class="p2p-top">
-          <div class="p2p-user">
-            <div class="p2p-avatar" style="background:#F6465D;">H</div>
-            Haile_FX
-          </div>
-          <div class="p2p-orders">287 Orders (98%)</div>
-        </div>
-        <div class="p2p-rate">174.20 <span>ETB</span></div>
-        <div class="p2p-meta">
-          <span>Limit <b>200 – 20,000 ETB</b></span>
-          <span>Available <b>340 USDT</b></span>
-        </div>
-        <div class="p2p-bottom">
-          <div class="p2p-method">Telebirr</div>
-          <button class="p2p-btn sell">Sell</button>
+      <div class="amount-display">
+        <div class="amount-num">0</div>
+        <div class="amount-currency">ETB</div>
+      </div>
+      <div class="rate-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        0 USDT &nbsp;·&nbsp; 1 USDT ≈ 175.50 ETB
+      </div>
+      <div class="express-bottom">
+        <button class="payment-btn">Select payment method</button>
+        <div class="numpad">
+          <button class="numpad-key">1</button><button class="numpad-key">2</button><button class="numpad-key">3</button>
+          <button class="numpad-key">4</button><button class="numpad-key">5</button><button class="numpad-key">6</button>
+          <button class="numpad-key">7</button><button class="numpad-key">8</button><button class="numpad-key">9</button>
+          <button class="numpad-key muted">.</button><button class="numpad-key">0</button><button class="numpad-key muted">⌫</button>
         </div>
       </div>
     </div>
@@ -461,6 +487,7 @@
   <!-- Modal overlay -->
   <div class="overlay" id="overlay">
     <div class="modal">
+
       <div class="modal-title"><span></span> Mini App<br>Coming Soon...</div>
       
   <div class="modal-divider"></div>
@@ -477,23 +504,32 @@
   </div>
 
   <script>
-  const express = document.getElementById('tab-express');
-  const p2p = document.getElementById('tab-p2p');
+  const tabExpress = document.getElementById('tab-express');
+  const tabP2P = document.getElementById('tab-p2p');
+  const viewP2P = document.getElementById('view-p2p');
+  const viewExpress = document.getElementById('view-express');
 
-  express.style.cursor = 'pointer';
-  p2p.style.cursor = 'pointer';
+  function switchTab(to) {
+    if (to === 'express') {
+      tabExpress.classList.add('active');
+      tabP2P.classList.remove('active');
+      viewP2P.classList.remove('active');
+      viewP2P.classList.add('hidden');
+      viewExpress.classList.remove('hidden');
+      viewExpress.classList.add('active');
+    } else {
+      tabP2P.classList.add('active');
+      tabExpress.classList.remove('active');
+      viewExpress.classList.remove('active');
+      viewExpress.classList.add('hidden');
+      viewP2P.classList.remove('hidden');
+      viewP2P.classList.add('active');
+    }
+  }
 
-  express.addEventListener('click', () => {
-    express.classList.add('active');
-    p2p.classList.remove('active');
-  });
-
-  p2p.addEventListener('click', () => {
-    p2p.classList.add('active');
-    express.classList.remove('active');
-  });
+  tabExpress.addEventListener('click', () => switchTab('express'));
+  tabP2P.addEventListener('click', () => switchTab('p2p'));
 </script>
-
 
 </body>
 </html>
