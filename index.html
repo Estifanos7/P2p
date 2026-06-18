@@ -30,19 +30,46 @@
       overflow: hidden;
     }
 
-    /* ── Background grid ── */
-    .bg-grid { display: none; }
-
-    /* ── Animated bg glow orbs ── */
-    .orb {
+    /* ── Top nav bar ── */
+    .topnav {
       position: fixed;
-      border-radius: 50%;
-      filter: blur(120px);
-      pointer-events: none;
-      z-index: 0;
-      animation: drift 14s ease-in-out infinite alternate;
+      top: 0; left: 0; right: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--bg);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-    .orb { display: none; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: -0.5px;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .nav-tabs .active {
+      color: var(--text);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 2px;
+    }
+    .nav-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      color: var(--gold);
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+    }
 
     /* ── Landing content (behind modal) ── */
     .landing {
@@ -51,129 +78,135 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       z-index: 1;
       transition: filter 0.5s ease, opacity 0.5s ease;
-      padding: 24px;
+      padding: 70px 16px 16px;
+      overflow: hidden;
     }
     .landing.blurred {
-      filter: blur(8px) brightness(0.45);
+      filter: blur(6px) brightness(0.4);
       pointer-events: none;
       user-select: none;
     }
 
-    /* Logo */
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 48px;
-    }
-    .logo-icon {
-      width: 52px; height: 52px;
-      background: var(--surface2);
-      border: 1.5px solid rgba(240,185,11,0.4);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-      font-size: 20px;
-      color: var(--gold);
-      letter-spacing: -1px;
-      box-shadow: 0 0 20px rgba(240,185,11,0.15), inset 0 1px 0 rgba(240,185,11,0.08);
-    }
-    .logo-text {
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--gold);
-    }
-    .logo-text span { color: var(--gold); }
-
-    /* Hero numbers (fake live data feel) */
-    .stats-row {
-      display: flex;
-      gap: 40px;
-      margin-bottom: 56px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .stat {
-      text-align: center;
-    }
-    .stat-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 28px;
-      font-weight: 500;
-      color: var(--gold);
-      letter-spacing: -0.5px;
-    }
-    .stat-val.green { color: var(--green); }
-    .stat-label {
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-top: 4px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    /* Fake order book rows */
-    .orderbook {
+    /* ── Filter bar ── */
+    .filterbar {
       width: 100%;
       max-width: 520px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .ob-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-    .ob-header span:last-child, .ob-row span:last-child { text-align: right; }
-    .ob-header span:nth-child(2), .ob-row span:nth-child(2) { text-align: center; }
-    .ob-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      padding: 8px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      position: relative;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-    }
-    .ob-row.sell span:first-child { color: var(--danger); }
-    .ob-row.buy span:first-child { color: var(--green); }
-    .ob-row span:last-child, .ob-row span:nth-child(2) { color: var(--muted); }
-    .ob-fill {
-      position: absolute;
-      top: 0; bottom: 0;
-      right: 0;
-      opacity: 0.08;
-      pointer-events: none;
-    }
-    .sell .ob-fill { background: var(--danger); }
-    .buy .ob-fill { background: var(--green); }
-    .ob-mid {
-      padding: 10px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--gold);
-      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       gap: 8px;
+      padding: 10px 0;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
     }
-    .ob-mid-label { font-size: 11px; color: var(--muted); font-weight: 400; }
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+    }
+    .filter-chip.active { border-color: var(--border); color: var(--gold); }
+    .filter-chip .arrow { font-size: 8px; }
+
+    /* ── P2P order cards ── */
+    .p2p-list {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .p2p-card {
+      background: var(--surface);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .p2p-card:last-child { border-bottom: none; }
+    .p2p-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .p2p-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .p2p-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--bg);
+    }
+    .p2p-orders {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .p2p-rate {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .p2p-rate span { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+    .p2p-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .p2p-meta b { color: var(--text); font-weight: 500; }
+    .p2p-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .p2p-method {
+      font-size: 11px;
+      color: var(--gold);
+      background: rgba(240,185,11,0.08);
+      border: 1px solid rgba(240,185,11,0.15);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .p2p-btn {
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      border-radius: 6px;
+      padding: 7px 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .p2p-btn.sell {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid rgba(246,70,93,0.35);
+    }
 
     /* ── Modal overlay ── */
     .overlay {
@@ -190,7 +223,7 @@
       background: var(--surface);
       border: 1px solid rgba(240,185,11,0.25);
       border-radius: 20px;
-      padding: 44px 40px 44px;
+      padding: 40px 36px 36px;
       max-width: 380px;
       width: 100%;
       position: relative;
@@ -208,7 +241,7 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Scan line — travels around the card border */
+    /* Scan line */
     .scan-line {
       position: absolute;
       inset: 0;
@@ -232,9 +265,6 @@
       100% { offset-distance: 100%; }
     }
 
-    /* Corner accents removed */
-    .modal::before, .modal::after { display: none; }
-
     .modal-badge {
       display: inline-flex;
       align-items: center;
@@ -248,9 +278,7 @@
       color: var(--gold);
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 24px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-bottom: 20px;
     }
     .badge-dot {
       width: 6px; height: 6px;
@@ -264,77 +292,70 @@
     }
 
     .modal-title {
-      font-size: 38px;
+      font-size: 34px;
       font-weight: 700;
       letter-spacing: -1px;
-      line-height: 1.1;
-      margin-bottom: 12px;
+      line-height: 1.15;
+      margin-bottom: 14px;
     }
     .modal-title span { color: var(--gold); }
 
     .modal-sub {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--muted);
       line-height: 1.6;
-      margin-bottom: 0;
+      margin-bottom: 28px;
       font-weight: 400;
     }
 
-    /* Feature tags */
-    .feature-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 32px;
+    .modal-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 0 -36px 24px;
     }
-    .tag {
-      background: var(--surface2);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-size: 12px;
+
+    .bot-cta {
+      background: rgba(240,185,11,0.07);
+      border: 1px solid rgba(240,185,11,0.18);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .bot-cta-label {
+      font-size: 11px;
       color: var(--muted);
       font-family: 'JetBrains Mono', monospace;
-      display: flex; align-items: center; gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
     }
-    .tag-icon { font-size: 11px; }
-
-    /* Notify input row */
-    .notify-row {
-      display: flex;
-      gap: 8px;
-    }
-    .notify-input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 14px;
+    .bot-cta-text {
+      font-size: 13px;
       color: var(--text);
-      font-family: 'Inter', sans-serif;
-      transition: border-color 0.2s;
+      line-height: 1.5;
+      margin-bottom: 12px;
     }
-    .notify-input::placeholder { color: var(--muted); }
-    .notify-input:focus { border-color: rgba(240,185,11,0.4); }
-
-    .notify-btn {
+    .bot-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: var(--gold);
       color: var(--bg);
       border: none;
       border-radius: 8px;
-      padding: 12px 20px;
-      font-size: 14px;
-      font-weight: 600;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
       font-family: 'Inter', sans-serif;
-      white-space: nowrap;
+      text-decoration: none;
       transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
     }
-    .notify-btn:hover { background: #f5c842; }
-    .notify-btn:active { transform: scale(0.97); }
+    .bot-btn:hover { background: #f5c842; }
+    .bot-btn:active { transform: scale(0.97); }
 
     .modal-footer {
-      margin-top: 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -343,18 +364,18 @@
       display: flex; align-items: center; gap: 8px;
     }
     .footer-logo-icon {
-      width: 26px; height: 26px;
+      width: 24px; height: 24px;
       background: var(--surface2);
       border: 1px solid rgba(240,185,11,0.35);
       border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 500;
       color: var(--gold);
     }
     .footer-logo-text {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text);
     }
@@ -367,74 +388,90 @@
 
     @media (max-width: 480px) {
       .modal { padding: 32px 24px 28px; }
-      .modal-title { font-size: 30px; }
-      .stats-row { gap: 24px; }
-      .stat-val { font-size: 20px; }
-      .notify-row { flex-direction: column; }
+      .modal-divider { margin: 0 -24px 20px; }
+      .modal-title { font-size: 28px; }
+      .nav-tabs { gap: 14px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="bg-grid"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+  <!-- Top nav -->
+  <div class="topnav">
+    <div class="nav-logo">P2Per</div>
+    <div class="nav-tabs">
+      <span>Express</span>
+      <span class="active">P2P</span>
+      <span>Block Trade</span>
+    </div>
+    <div class="nav-pill">ETB ▾</div>
+  </div>
 
   <!-- Landing page (gets blurred) -->
   <div class="landing blurred" id="landing">
 
-    <div class="logo-wrap">
-      <div class="logo-icon">P2P</div>
-      <div class="logo-text">P2<span>Per</span></div>
+    <div class="filterbar">
+      <div class="filter-chip active">USDT <span class="arrow">▾</span></div>
+      <div class="filter-chip">Amount <span class="arrow">▾</span></div>
+      <div class="filter-chip">All Payment Methods <span class="arrow">▾</span></div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat">
-        <div class="stat-val">96,412</div>
-        <div class="stat-label">Active Users</div>
+    <div class="p2p-list">
+      <div class="p2p-card">
+        <div class="p2p-top">
+          <div class="p2p-user">
+            <div class="p2p-avatar" style="background:#F0B90B;">A</div>
+            Abebe_ETH
+          </div>
+          <div class="p2p-orders">412 Orders (99%)</div>
+        </div>
+        <div class="p2p-rate">175.50 <span>ETB</span></div>
+        <div class="p2p-meta">
+          <span>Limit <b>500 – 50,000 ETB</b></span>
+          <span>Available <b>1,200 USDT</b></span>
+        </div>
+        <div class="p2p-bottom">
+          <div class="p2p-method">Telebirr · CBE</div>
+          <button class="p2p-btn">Buy</button>
+        </div>
       </div>
-      <div class="stat">
-        <div class="stat-val green">+2.14%</div>
-        <div class="stat-label">ETB / USDT</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val">$4.2M</div>
-        <div class="stat-label">24h Volume</div>
-      </div>
-    </div>
 
-    <div class="orderbook">
-      <div class="ob-header">
-        <span>Rate (ETB)</span>
-        <span>Amount (USDT)</span>
-        <span>Total</span>
+      <div class="p2p-card">
+        <div class="p2p-top">
+          <div class="p2p-user">
+            <div class="p2p-avatar" style="background:#0ECB81;">S</div>
+            Selam_Trade
+          </div>
+          <div class="p2p-orders">1,033 Orders (100%)</div>
+        </div>
+        <div class="p2p-rate">174.80 <span>ETB</span></div>
+        <div class="p2p-meta">
+          <span>Limit <b>1,000 – 200,000 ETB</b></span>
+          <span>Available <b>8,500 USDT</b></span>
+        </div>
+        <div class="p2p-bottom">
+          <div class="p2p-method">Abyssinia · Awash</div>
+          <button class="p2p-btn">Buy</button>
+        </div>
       </div>
-      <div class="ob-row sell">
-        <span>97.24</span><span>1,200.00</span><span>116,688</span>
-        <div class="ob-fill" style="width:80%"></div>
-      </div>
-      <div class="ob-row sell">
-        <span>96.95</span><span>840.50</span><span>81,509</span>
-        <div class="ob-fill" style="width:55%"></div>
-      </div>
-      <div class="ob-row sell">
-        <span>96.60</span><span>320.00</span><span>30,912</span>
-        <div class="ob-fill" style="width:25%"></div>
-      </div>
-      <div class="ob-mid">
-        96.42 <span class="ob-mid-label">ETB / USDT</span>
-      </div>
-      <div class="ob-row buy">
-        <span>96.20</span><span>500.00</span><span>48,100</span>
-        <div class="ob-fill" style="width:40%"></div>
-      </div>
-      <div class="ob-row buy">
-        <span>95.80</span><span>2,100.00</span><span>201,180</span>
-        <div class="ob-fill" style="width:90%"></div>
-      </div>
-      <div class="ob-row buy">
-        <span>95.40</span><span>670.00</span><span>63,918</span>
-        <div class="ob-fill" style="width:32%"></div>
+
+      <div class="p2p-card">
+        <div class="p2p-top">
+          <div class="p2p-user">
+            <div class="p2p-avatar" style="background:#F6465D;">H</div>
+            Haile_FX
+          </div>
+          <div class="p2p-orders">287 Orders (98%)</div>
+        </div>
+        <div class="p2p-rate">174.20 <span>ETB</span></div>
+        <div class="p2p-meta">
+          <span>Limit <b>200 – 20,000 ETB</b></span>
+          <span>Available <b>340 USDT</b></span>
+        </div>
+        <div class="p2p-bottom">
+          <div class="p2p-method">Telebirr</div>
+          <button class="p2p-btn sell">Sell</button>
+        </div>
       </div>
     </div>
 
@@ -445,8 +482,30 @@
     <div class="modal">
       <div class="scan-line"></div>
 
-      <div class="modal-title"><span>P2Per</span> mini app is<br>Coming Soon...</div>
+      <div class="modal-badge"><div class="badge-dot"></div> In Development</div>
 
+      <div class="modal-title"><span>P2Per</span> Mini App<br>Coming Soon</div>
+
+      <div class="modal-sub">A full P2P trading experience — right inside Telegram. Order book, live rates, and one-tap trades.</div>
+
+      <div class="modal-divider"></div>
+
+      <div class="bot-cta">
+        <div class="bot-cta-label">Available Now</div>
+        <div class="bot-cta-text">In the meantime, our Telegram bot is live and ready. It'll serve you well while we build the full experience.</div>
+        <a class="bot-btn" href="https://t.me/p2perbot" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+          Open P2Per Bot
+        </a>
+      </div>
+
+      <div class="modal-footer">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">P2P</div>
+          <div class="footer-logo-text">P2<span>Per</span></div>
+        </div>
+        <div class="footer-tag">ETB / USDT · BSC</div>
+      </div>
 
     </div>
   </div>
