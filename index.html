@@ -401,23 +401,33 @@
     .nav-tabs span { cursor: pointer; transition: color 0.2s; }
    
 .nav-profile {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: linear-gradient(135deg, rgba(240,185,11,0.12), rgba(255,255,255,0.04));
+  border: 1px solid rgba(240,185,11,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--muted);
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.nav-profile-inner {
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+  transition: opacity 0.2s;
 }
 .nav-profile:hover {
-  background: rgba(255,255,255,0.09);
-  border-color: rgba(255,255,255,0.18);
-  color: var(--text);
+  background: linear-gradient(135deg, rgba(240,185,11,0.2), rgba(255,255,255,0.06));
+  border-color: rgba(240,185,11,0.4);
+  box-shadow: 0 4px 14px rgba(240,185,11,0.15);
 }
+.nav-profile:hover .nav-profile-inner { opacity: 1; }
+
 
   </style>
 </head>
@@ -431,13 +441,15 @@
       <span class="active" id="tab-p2p">P2P</span>
       <span></span>
     </div>
-   <div class="nav-profile" id="nav-profile">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="8" r="4"/>
-    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-  </svg>
-</div>
+<div class="nav-profile" id="nav-profile">
+  <div class="nav-profile-inner">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="12" cy="7" r="4.5"/>
+      <path d="M3.5 20.5c0-4.14 3.81-7.5 8.5-7.5s8.5 3.36 8.5 7.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
   </div>
+</div>
+
 
   <!-- Landing page (gets blurred) -->
   <div class="landing blurred" id="landing">
